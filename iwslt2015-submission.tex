@@ -36,16 +36,20 @@ Karlsruhe Institute of Technology, Germany \\
 \maketitle
 %
 \begin{abstract}
+Neural network and translation models have recently shown great potentials in improving the performance of language modeling in phrase-based machine translation. Recurrent language models with different word factors, in particular, were a great success due to their ability to incorporate additional knowledge into the model. At the same time, great achievements have been attained in latent concept learning in the area of text mining. In this work, we combined both ideas to integrate global semantic information extracted from large independent knowledge bases into neural network language models. To do this, we propose two novel approaches: one on the word and one on the sentence level. 
+The new resulting models are especially helpful for morphologically rich languages without the need to expand the training corpus but also in solving lexical ambiguities. This approach of integrating global context information is not restricted to language modeling but can also be easily applied to any model that profits from context, e.g. neural network machine translation. Using this model has improved translation quality of a state-of-the-art phrase-based translation system by ... BLEU points.  We performed experiments on two language pairs.
+
+
 
 \end{abstract}
 
 
 %
 \section{Introduction}
-This template can be found on the conference 
-website: \texttt{http://iwslt.org/}.
-Please use either a MS-Word\reg\ or a \LaTeX\ format file
-when preparing your submission. 
+
+Neural network and translation models have recently shown great potentials in improving the performance of language modeling in phrase-based machine translation. Recurrent language models with different word factors, in particular, were a great success due to their ability to incorporate additional knowledge into the model. In the past, mainly restricted to syntactic or clustered word class information on the word level. At the same time, great achievements have been attained in topic modeling and latent concept learning in the area of text mining. In this work, we combined both ideas to use global context extracted from large independent knowledge bases as an additional input into the neural network model. 
+This is especially helpful for languages with little training data, great morphology and lexical ambiguities. Using this model has improved translation quality of a state-of-the-art phrase-based translation system by ... BLEU points. This approach of integrating additional semantic information is not restricted to language modeling but can also be easily applied to any model that profits from context, e.g. neural network machine translation. We performed experiments on two language pairs.
+
 
 \section{Page layout and style}
 

@@ -1,0 +1,50 @@
+\begin{thebibliography}{1}
+\providecommand{\url}[1]{#1}
+\csname url@rmstyle\endcsname
+\providecommand{\newblock}{\relax}
+\providecommand{\bibinfo}[2]{#2}
+\providecommand\BIBentrySTDinterwordspacing{\spaceskip=0pt\relax}
+\providecommand\BIBentryALTinterwordstretchfactor{4}
+\providecommand\BIBentryALTinterwordspacing{\spaceskip=\fontdimen2\font plus
+\BIBentryALTinterwordstretchfactor\fontdimen3\font minus
+  \fontdimen4\font\relax}
+\providecommand\BIBforeignlanguage[2]{{%
+\expandafter\ifx\csname l@#1\endcsname\relax
+\typeout{** WARNING: IEEEtran.bst: No hyphenation pattern has been}%
+\typeout{** loaded for the language `#1'. Using the pattern for}%
+\typeout{** the default language instead.}%
+\else
+\language=\csname l@#1\endcsname
+\fi
+#2}}
+
+\bibitem{bilmes2003factored}
+J.~A. Bilmes and K.~Kirchhoff, ``Factored language models and generalized
+  parallel backoff,'' in \emph{Proceedings of the 2003 Conference of the North
+  American Chapter of the Association for Computational Linguistics on Human
+  Language Technology: companion volume of the Proceedings of HLT-NAACL
+  2003--short papers-Volume 2}.\hskip 1em plus 0.5em minus 0.4em\relax
+  Association for Computational Linguistics, 2003, pp. 4--6.
+
+\bibitem{koehn2007factored}
+P.~Koehn and H.~Hoang, ``Factored translation models.'' in \emph{EMNLP-CoNLL},
+  2007, pp. 868--876.
+
+\bibitem{mikolov2010recurrent}
+T.~Mikolov, M.~Karafi{\'a}t, L.~Burget, J.~Cernock{\`y}, and S.~Khudanpur,
+  ``Recurrent neural network based language model.'' in \emph{Interspeech},
+  vol.~2, 2010, p.~3.
+
+\bibitem{wu2012factored}
+Y.~Wu, X.~Lu, H.~Yamamoto, S.~Matsuda, C.~Hori, and H.~Kashioka, ``Factored
+  language model based on recurrent neural network,'' 2012.
+
+\bibitem{niehuesusing}
+J.~Niehues, T.-L. Ha, E.~Cho, and A.~Waibel, ``Using factored word
+  representation in neural network language models.''
+
+\bibitem{mikolov2012context}
+T.~Mikolov and G.~Zweig, ``Context dependent recurrent neural network language
+  model.'' in \emph{SLT}, 2012, pp. 234--239.
+
+\end{thebibliography}

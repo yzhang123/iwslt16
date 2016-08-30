@@ -9,7 +9,7 @@
 
 %% \newcommand{\reg}{\textsuperscript{\textcircled{\textsc r}}}
 
-\title{Integrating Semantic information into Factored Neural Network Language Models}
+\title{Integrating Semantic information into Neural Network Language Models}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% Please make sure to keep technical paper submissions anonymous  !
@@ -36,8 +36,8 @@ Karlsruhe Institute of Technology, Germany \\
 \maketitle
 %
 \begin{abstract}
-Neural network and translation models have recently shown great potentials in improving the performance of language modeling in phrase-based machine translation. Recurrent language models with different word factors, in particular, were a great success due to their ability to incorporate additional knowledge into the model. At the same time, great achievements have been attained in latent concept learning in the area of text mining. In this work, we combined both ideas to integrate global semantic information extracted from large independent knowledge bases into neural network language models. To do this, we propose two novel approaches: one on the word and one on the sentence level. 
-The new resulting models are especially helpful for morphologically rich languages without the need to expand the training corpus but also in solving lexical ambiguities. This approach of integrating global context information is not restricted to language modeling but can also be easily applied to any model that profits from context, e.g. neural network machine translation. Using this model has improved translation quality of a state-of-the-art phrase-based translation system by ... BLEU points.  We performed experiments on two language pairs.
+Neural network and translation models have recently shown great potentials in improving the performance of language modeling in phrase-based machine translation. Recurrent language models with different word factors, in particular, were a great success due to their ability to incorporate additional knowledge into the model. At the same time, great achievements have been attained in latent concept learning in the area of text mining. In this work, we combined both ideas to integrate global semantic information extracted from large independent knowledge bases into neural network language models. We propose two novel approaches for doing this: word class extraction from Wikipedia and sentence level topic modeling. 
+The new resulting models are especially helpful for morphologically rich languages without the need to expand the training corpus but also in solving lexical ambiguities. This approach of integrating global context information is not restricted to language modeling but can also be easily applied to any model that profits from context, e.g. neural network machine translation. Using this model has improved rescoring quality of a state-of-the-art phrase-based translation system by ... BLEU points.  We performed experiments on two language pairs.
 
 
 
@@ -46,31 +46,31 @@ The new resulting models are especially helpful for morphologically rich languag
 
 %
 \section{Introduction}
+Recurrent neural network language models have recently shown great improvement in statistical machine translation, both during decoding and rescoring. The reason for them outperforming previous language models is that they maintain a hidden layer with recurrent connections to their previous values which makes them able to capture long span dependencies. However, often we can not control which relations are learned by the network, which motivated the attempt to provide neural networks with useful input information in the first place. This has motivated neural network language models that take multiple parallel streams of data as input instead of just the single form of surface words, thus generalizing the input and output layer of conventional models. These so called factors can be used to add additional information, e.g. POS or automatic word clusters, which helps mainly with morphologically rich languages (e.g. Romanian, German) but can also consider even longer context and therefore improve the modeling of the overall structure.
+However, so far the use of factors or additional information has been limited in neural network models. Also, in those cases the extra feature only attributed to syntactic or local context knowledge around the current word. 
+In this paper, we study the integration of large independent knowledge bases in the form of encyclopedia, e.g. Wikipedia, into RNN-based language models. This is motivated by the emergence of the Internet that has led to an explosion of textual data in particular. These data sources give insights into a variety of human endeavors waiting to be computationally analyzed.
+First, we propose the novel idea to use extracted Wikipedia categories as one of the word factors in factored neural network models. In order to understand large unstructured datasets great achievements have been attained in latent concept learning in the area of text mining. Techniques include categorization of documents using latent semantic analysis and probabilistic topic modeling. As a second approach, we employed these in the RNNLM in this work by explicitly computing a background topic vector for each sentence that is fed into the network as additional input. Using word classes and semantic features helps with sparsely inflected languages(e.g. English, Chinese) \cite{bilmes2003factored}
+In the model we use LSTMs to consider both independent side information and local context information for the model prediction.
 
-Neural network and translation models have recently shown great potentials in improving the performance of language modeling in phrase-based machine translation. Recurrent language models with different word factors, in particular, were a great success due to their ability to incorporate additional knowledge into the model. In the past, mainly restricted to syntactic or clustered word class information on the word level. At the same time, great achievements have been attained in topic modeling and latent concept learning in the area of text mining. In this work, we combined both ideas to use global context extracted from large independent knowledge bases as an additional input into the neural network model. 
-This is especially helpful for languages with little training data, great morphology and lexical ambiguities. Using this model has improved translation quality of a state-of-the-art phrase-based translation system by ... BLEU points. This approach of integrating additional semantic information is not restricted to language modeling but can also be easily applied to any model that profits from context, e.g. neural network machine translation. We performed experiments on two language pairs.
 
+\section{Related Work}
+Language models are a critical component of many application systems, e.g. ASR, MT and OCR. However, language models have always faced the problem of data sparseness. Factored Language Models \cite{bilmes2003factored} introduced the use of a bundle of factors associated with a word which outperformed previous n-gram models without expanding the training data. For factors morphs, stems, POS and word class obtained using the SRILM's n-gram-class tool were used. \cite{koehn2007factored} replaced the single feature stream of surface words with multiple factors and integrated it into phrase-based statistical machine translation systems by breaking down the translation model into several steps that pertain to the translation of single factors which are all taken into account when the target word is generated.
+After recurrent neural network models became a success in language modeling \cite{mikolov2010recurrent}, factored input layer was employed by \cite{wu2012factored} which used a structured output layer based on word classes that was able to handle vocabulary of arbitrary size.
+Motivated by multi-task learning in NLP, \cite{niehuesusing} proposed a multi-factor recurrent neural network language model which jointly predicts different output factors by mapping the output of the LSTM-layer to as many softmax layers as there are output factors, thus creating multiple distributions at the output layer. In the rescoring of an n-best list, this model can be included as one additional feature or several features depending on if the output is treated as a joint probability or individual probabilities.
+One disadvantage of factored input is that additional factors must match the surface words in space. As a consequence, surface word data that uses 1-of-n encoding cannot have factors with continuous space representations.
+However, this is often necessary to model more complex structures, e.g. topic distributions. 
+In \cite{mikolov2012context}, a topic-conditioned RNNLM is proposed which takes a real-valued input vector as an additional input in association with each word. This vector is used to convey local context information based on previous sentences using latent dirichlet allocation.
+Often, the meaning of a word cannot be just derived from its preceding words but by function words in the entire sentence or surrounding sentences. 
+However, the model cannot take side information associated with a sentence that contains the current word, which is what we studied in the second part.
 
-\section{Page layout and style}
+\section{Integration of Side Information}
 
-Authors should should observe the following rules for page
-layout. A highly  recommended way to meet these requirements
-is to use a predefined template and check
-details against the corresponding example file.
-
-\subsection{First page}
-
-The first page should have the paper title, author(s), and affiliation(s)
-centered on the page across both columns. The remainder of the text 
-must be in the two-column format, staying within the indicated image 
-area. 
-
-\subsubsection{Paper Title}
+\subsection{Word class extraction}
 The paper title must be in boldface. All non-function words must be capitalized,
 and all other words in the title must be lower case. The paper title is centered
 across the top of the two columns on the first page as indicated above.
 
-\subsubsection{Authors' Name(s)}
+\subsection{Sentence level topic modeling}
 The authors' name(s) and affiliation(s) appear centered below the paper
 title. If space permits, include a mailing address here. The templates indicate
 the area where the title and author information should go. These items need not
@@ -79,10 +79,18 @@ authors and affiliations may require two or more lines.
 Note that the submission version of technical papers \emph{should be 
 anonymized for review}. 
 
-\subsubsection{Abstract}
-Each paper must contain an abstract that appears at the beginning of the paper.
 
-\subsection{Basic layout features}
+
+\section{Experiments}
+\subsection{System Description}
+\subsection{English-Chinese}
+\subsection{English-Romanian}
+\section{Conclusion}
+\section{Acknowledgements}
+The IWSLT 2015 organizing committee would like to thank the
+organizing committees of INTERSPEECH 2004 for their
+help and for kindly providing the template files.
+
 
 \begin{itemize}
 %\itemsep -1.3mm
@@ -234,24 +242,21 @@ setting so as to ensure that your results could be reproduced by other teams.
 
 This paper has described a novel approach for doing wonderful stuff such as ...
 
-\section{Acknowledgements}
-The IWSLT 2015 organizing committee would like to thank the
-organizing committees of INTERSPEECH 2004 for their
-help and for kindly providing the template files.
 
 %
 \bibliographystyle{IEEEtran}
-\begin{thebibliography}{10}
-\bibitem[1]{ES1} Smith, J. O. and Abel, J. S., 
-``Bark and {ERB} Bilinear Transforms'', 
-IEEE Trans. Speech and Audio Proc., 7(6):697--708, 1999.  
-\bibitem[2]{ES2} Lee, K.-F., Automatic Speech Recognition: 
-The Development of the 
-SPHINX SYSTEM, Kluwer Academic Publishers, Boston, 1989.
-\bibitem[3]{ES3} Rudnicky, A. I., Polifroni, Thayer, E. H.,
- and Brennan, R. A.  
-"Interactive problem solving with speech", J. Acoust. Soc. Amer., 
-Vol. 84, 1988, p S213(A).
-\end{thebibliography}
+\bibliography{references}
+%\begin{comment}
+%\bibitem[1]{ES1} Smith, J. O. and Abel, J. S., 
+%``Bark and {ERB} Bilinear Transforms'', 
+%IEEE Trans. Speech and Audio Proc., 7(6):697--708, 1999.  
+%\bibitem[2]{ES2} Lee, K.-F., Automatic Speech Recognition: 
+%The Development of the 
+%SPHINX SYSTEM, Kluwer Academic Publishers, Boston, 1989.
+%\bibitem[3]{ES3} Rudnicky, A. I., Polifroni, Thayer, E. H.,
+% and Brennan, R. A.  
+%"Interactive problem solving with speech", J. Acoust. Soc. Amer., 
+%Vol. 84, 1988, p S213(A).
+%\end{comment}
 \end{document}
 

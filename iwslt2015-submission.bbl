@@ -1,4 +1,4 @@
-\begin{thebibliography}{1}
+\begin{thebibliography}{10}
 \providecommand{\url}[1]{#1}
 \csname url@rmstyle\endcsname
 \providecommand{\newblock}{\relax}
@@ -46,5 +46,30 @@ J.~Niehues, T.-L. Ha, E.~Cho, and A.~Waibel, ``Using factored word
 \bibitem{mikolov2012context}
 T.~Mikolov and G.~Zweig, ``Context dependent recurrent neural network language
   model.'' in \emph{SLT}, 2012, pp. 234--239.
+
+\bibitem{salton1986introduction}
+G.~Salton and M.~J. McGill, ``Introduction to modern information retrieval,''
+  1986.
+
+\bibitem{deerwester1990indexing}
+S.~Deerwester, S.~T. Dumais, G.~W. Furnas, T.~K. Landauer, and R.~Harshman,
+  ``Indexing by latent semantic analysis,'' \emph{Journal of the American
+  society for information science}, vol.~41, no.~6, p. 391, 1990.
+
+\bibitem{bradford2008empirical}
+R.~B. Bradford, ``An empirical study of required dimensionality for large-scale
+  latent semantic indexing applications,'' in \emph{Proceedings of the 17th ACM
+  conference on Information and knowledge management}.\hskip 1em plus 0.5em
+  minus 0.4em\relax ACM, 2008, pp. 153--162.
+
+\bibitem{blei2003latent}
+D.~M. Blei, A.~Y. Ng, and M.~I. Jordan, ``Latent dirichlet allocation,''
+  \emph{Journal of machine Learning research}, vol.~3, no. Jan, pp. 993--1022,
+  2003.
+
+\bibitem{hoffman2010online}
+M.~Hoffman, F.~R. Bach, and D.~M. Blei, ``Online learning for latent dirichlet
+  allocation,'' in \emph{advances in neural information processing systems},
+  2010, pp. 856--864.
 
 \end{thebibliography}

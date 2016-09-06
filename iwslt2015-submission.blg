@@ -8,56 +8,54 @@ Reallocated singl_function (elt_size=4) to 100 items from 50.
 Reallocated wiz_functions (elt_size=4) to 6000 items from 3000.
 Reallocated singl_function (elt_size=4) to 100 items from 50.
 Database file #1: references.bib
-Warning--I didn't find a database entry for "ES1"
-Warning--I didn't find a database entry for "ES2"
-Warning--I didn't find a database entry for "ES3"
 -- IEEEtran.bst version 1.11 (2003/04/02) by Michael Shell.
 -- http://www.ctan.org/tex-archive/macros/latex/contrib/supported/IEEEtran/
 -- See the "IEEEtran_bst_HOWTO.pdf" manual for usage information.
 Warning--empty journal in wu2012factored
 Warning--empty journal in niehuesusing
 Warning--empty year in niehuesusing
+Warning--empty journal in salton1986introduction
 
 Done.
-You've used 6 entries,
+You've used 11 entries,
             3975 wiz_defined-function locations,
-            833 strings with 8237 characters,
-and the built_in function-call counts, 4095 in all, are:
-= -- 288
-> -- 110
-< -- 25
-+ -- 56
-- -- 21
-* -- 201
-:= -- 607
-add.period$ -- 13
-call.type$ -- 6
-change.case$ -- 6
-chr.to.int$ -- 60
-cite$ -- 9
-duplicate$ -- 305
-empty$ -- 373
-format.name$ -- 27
-if$ -- 931
+            858 strings with 9145 characters,
+and the built_in function-call counts, 7848 in all, are:
+= -- 591
+> -- 195
+< -- 58
++ -- 103
+- -- 35
+* -- 378
+:= -- 1164
+add.period$ -- 24
+call.type$ -- 11
+change.case$ -- 11
+chr.to.int$ -- 135
+cite$ -- 15
+duplicate$ -- 581
+empty$ -- 682
+format.name$ -- 45
+if$ -- 1802
 int.to.chr$ -- 0
-int.to.str$ -- 6
-missing$ -- 58
-newline$ -- 38
-num.names$ -- 6
-pop$ -- 159
+int.to.str$ -- 11
+missing$ -- 104
+newline$ -- 53
+num.names$ -- 11
+pop$ -- 266
 preamble$ -- 1
 purify$ -- 0
 quote$ -- 2
-skip$ -- 315
+skip$ -- 611
 stack$ -- 0
-substring$ -- 148
-swap$ -- 216
-text.length$ -- 5
+substring$ -- 333
+swap$ -- 438
+text.length$ -- 13
 text.prefix$ -- 0
 top$ -- 5
 type$ -- 0
-warning$ -- 3
-while$ -- 19
-width$ -- 7
-write$ -- 69
-(There were 6 warnings)
+warning$ -- 4
+while$ -- 37
+width$ -- 13
+write$ -- 116
+(There were 4 warnings)

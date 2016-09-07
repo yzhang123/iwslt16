@@ -69,7 +69,8 @@ We studied two approaches to integrate encyclopediatic information into neural l
 First, we extracted for each word a corresponding label from Wikipedia. For this, we exploite the existing hierarchical page structure of Wikipedia and use the category name of a page as a factor input into the previously described factored neural language model.
 Second, for each sentence a ranking of similar encyclopedia documents is calculated using vector space models, such as tfidf or LSA, and topic models, such as LDA. Based on the same underlying models a feature vector of the most similar documents to the current sentence is computed which is fed into a neural language model as additional input. The second approach is not limited to Wikipedia, but can be applied to any encyclopedia. To show the efficiency of this method independent from the underlying knowledge source we have crawled a Chinese encyclopedia for which we will present the results later on. 
 
-\subsection{Word Level Information}
+\subsection{Word Level Information} \label{sec:word-level}
+\subsubsection{Input representation}
 A Wikipedia page has an title and is either an article or a category page which encompasses one or multiple pages.
 We define the search space as the set of all page titles. Given a word, we search for the page with the same word as title and retrieve its category which is found at the bottom of the page.
 In case of multiple categories we pick the first one, which is usually the most general one.
@@ -78,15 +79,16 @@ In implementation, we utilized the downloadable Wikipedia dump to create a offli
 One typical characteristic of Wikipedia is that most of its articles only refer to a small group lexical categories. For example, there are lots more articles about objects (nouns) than about activities (verbs).
 For this reason, we can significantly minimize the number of category lookups by restricting those to the words of the most common POS groups without taking big losses in model quality. We will show results for looking up every word versus just nouns. \\
 \\
+\subsubsection{Factored language model}
+For training we used the factored language model proposed in \cite{niehuesusing}, which takes in one or multiple factors at the input layer and offers the option to factorize output layer. After concatenating the embeddings of the input factors into a single word embedding, this vector is send through one or multiple LSTM-based layers before projected onto the factored output probabilities. The instance of the model we used for our purposes, takes two factors, the surface form and the Wikipedia word category. These are mapped to an embedding vector of size 100, which is the same size as the first LSTM-layer. For the second LSTM-layer we used 200 nodes. We only used one factor for the output, the surface form of the next word.
 
 
-
-\subsection{Sentence Level Information}
-To create a ranking of similar documents and their representation to a given sentence we employ vector space models, such as the tf-idf and latent semantic indexing model, as well as topic models, such as the latent dirichlet allocation. After representing the sentences and cleaned encyclopedia articles as bag-of-words with the underlying vocabulary from the training, we can find the most similar documents, which are the articles, for each query, which are the sentences, based on the underlying models.
+\subsection{Sentence Level Information} \label{sec:sentence-level}
+To create a ranking of similar documents and their representation to a given sentence we employ vector space models, such as the tf-idf and latent semantic indexing model, as well as topic models, such as the latent dirichlet allocation. After representing the sentences and cleaned encyclopedia articles as bag-of-words with the underlying vocabulary from the training, we can find for each query, which are the sentences, the most similar documents from $D$, which are the articles,  based on the underlying models.
 
 \subsubsection{TF-IDF}
-Tf-idf \cite{salton1986introduction} reflects how important a word is to a document or a whole collection of documents, its measures the co-occurrence. The advantage of tf-idf is that it grades down terms that appear in multiple documents which makes them less relevant.
-The tf-idf is computed by multiplying a local component (term frequency or tf) with a global component (inverse document frequency or idf). Term frequency $tf(t, d)$ is defined as the number of times that term $t$ appears in document $d$:
+Tf-idf \cite{salton1986introduction} reflects how important a word is to a document or a whole collection of documents, it measures the co-occurrence. The advantage of tf-idf is that it grades down terms that appear in multiple documents which makes them less relevant.
+The tf-idf is computed by multiplying a local component (term frequency or $tf$) with a global component (inverse document frequency or $idf$). Term frequency $tf(t, d)$ is defined as the number of times that term $t$ appears in document $d$:
 \begin{equation} 
 tf(t,d)=\dfrac{count_d(t)}{|d|}
 \end{equation}
@@ -97,31 +99,31 @@ idf(t,D)= \log_2{ \dfrac{|D|}{|\{d \in D: t \in d\}|}}
 \begin{equation}
 tfidf(t, d, D) = tf(t,d) \cdot idf(t,D)
 \end{equation}
-Calculating tf-idf for each word in a vector gives an tf-idf vector. In gensim, this vector is normalized at the end.
+Calculating tf-idf for each word in a vector gives an tf-idf vector. We used the python library gensim, which normalizes the vector at the end.
 
 To compute a ranking of similar documents for a given sentence query, we compute the query's tf-idf vector $q$ and compare it to each of the documents' tf-idf vectors $d_1, d_2, \ldots, d_{|D|}$ using the cosine to calculate the angle $\theta$ between vector pairs:
 \begin{equation} \label{eq:cos-similar}
 \cos \theta_i = \dfrac{q \cdot d_i}{|q| \cdot |d_i|}
 \end{equation} 
 The closer this value is to 1 the better the match.
-For a predefined number of top documents $n$ we find the best n documents to a query and compute the average of their tfidf which we denote with $\text{top-doc-tfidf}(q, D, n)$.
-This vector constitutes the sentence level semantic information which fed into a RNNLM together with the surface data stream.
-Shortcomings of this model are that it does not reduce the description length of the document, since words are only replaced with values. Also, it does not tell much about the statistical structure within and between documents.
+For a predefined number of top documents $n$ we determine the averaged tf-idf value of the best $n$ documents to a query, which we denote with $\text{top-doc-tfidf}(q, D, n)$.
+This vector constitutes the sentence level semantic information which is fed into a RNNLM together with the surface data stream.
+Shortcomings of this model include the inability to reduce the description length of the document, since words are only replaced with values. Also, it does not tell much about the statistical structure within and between documents.
 
 
 \subsubsection{Latent Semantic Indexing}
-Another model we used is Latent Semantic Analysis (LSA) or Latent Semantic Indexing (LSI) \cite{deerwester1990indexing}.
-LSI is a method for discovering hidden concepts in document data. Those hidden concepts are found using Single Value Decomposition(SVD) based on our documents. The derived LSI features are a linear combination of the original tf-idf features.
-To calculate the similarity between a query q to any document d using equation \ref{eq:cos-similar}, we express both q and d in a unified way corresponding to these concepts, so that each of their vector elements gives the degree of participation of query or document in the corresponding concept. 
+Another model we used is latent semantic analysis (LSA) or latent semantic indexing (LSI) \cite{deerwester1990indexing}.
+LSI is a method for discovering hidden concepts in document data by using single value decomposition (SVD) on the set of documents $D$.
+To calculate the similarity between a query $q$ and any document $d$ according equation \ref{eq:cos-similar}, we must first express $q$ and $d$ in a unified way corresponding to these concepts, so that each of their vector elements gives the degree of participation of query or document in the corresponding concept. 
 
-LSI uses a term-document matrix or occurrence matrix $A$, whose rows correspond to terms and columns correspond to documents. The entry $o_{i,j}$ is the tfidf-value of term i with respect to document j, that is $tfidf(t_i, d_j, D)$. SVD decomposing A into U, $\Sigma$, V so that $A = U \Sigma V^T $. U and V are orthonormal matrices and $\Sigma$ is a diagonal matrix whose diagonal elements are called single values.
-LSI uses the decomposition to find a low-rank approximation, that is, a matrix $A_k$ of a predefined lower rank $k$ closes in similarity to the original matrix $A$. This is done by deleting all but the k biggest single values and the according rows and columns in V and S.
-The degree of similarity is determined by the Frobenius Distance $\|A-A_k\|_F$, which is minimized by LSI. In our case, $k$ is the number of hidden concepts we want to learn. The number of dimensions k is an empirical question. However, crucially k is much smaller than the original space dimension, which is probably about the number of total documents. Previous papers show that for Wikipedia data containing between hundreds of thousands and a few million articles $k$ should be chosen between 200 to 500 \cite{bradford2008empirical}. We chose 300 for k.
+LSI uses a term-document matrix or occurrence matrix $A$, whose rows correspond to terms and columns correspond to documents. The entry $A_{i,j}$ equates to $tfidf(t_i, d_j, D)$. SVD decomposes A into U, $\Sigma$ and V so that $A = U \Sigma V^T $ with U and V being orthonormal matrices and $\Sigma$ a diagonal matrix with the single values on the diagonal.
+LSI uses the decomposition to find a low-rank approximation, that is, a matrix $A_k$ of a predefined lower rank $k$ closest in similarity to the original matrix $A$. This is done by deleting all but the $k$ biggest single values and the according rows and columns in V and S.
+The degree of similarity is determined by the Frobenius Distance $\|A-A_k\|_F$, which is minimized by LSI. In our case, $k$ is the number of hidden concepts we want to learn. The number of dimensions $k$ is an empirical question. Essentially, $k$ is much smaller than the original space dimension, which is usually the number of total documents. Previous papers show that for Wikipedia dumps containing between hundreds of thousands and a few million articles $k$ should be chosen between 200 to 500 \cite{bradford2008empirical}. For our use we chose $k$ as 300.
 
 
 \subsubsection{Latent Dirichlet Allocation}
 Finally, we used Latent Dirichlet Allocation (LDA) \cite{blei2003latent}, a generative probabilistic model to automatically discover topics from a data collection.
-The basic idea is that documents are represented as random mixtures over latent topics, where each topic is characterized by a distribution over words. The model is a three-level hierarchical Bayesian model with the first level being the corpus-level, the second being the document-level and the third-level being the word-level. Having the number of topics to be learned set to K, following assumptions are made to generate a document \textbf{w} of length $N$ in a corpus $D$:
+The basic idea is that documents are represented as random mixtures over latent topics, where each topic is characterized by a distribution over words. The model is a three-level hierarchical Bayesian model with the first level being the corpus-level, the second being the document-level and the third-level being the word-level. Setting the number of topics to be learned to K, the following assumptions are made to generate a document \textbf{w} of length $N$ from a corpus $D$:
 \begin{enumerate}
 \item Choose the document length $N \sim Poisson(\xi)$
 \item Choose document's distribution of topics $\theta \sim Dir(\alpha)$ with K dimensions
@@ -131,13 +133,127 @@ The basic idea is that documents are represented as random mixtures over latent 
 \item Choose $ w_n$ from $p(w_n|z_n, \beta)$, a multinomial probability conditioned on the topic $z_n$. $\beta$ is a $K \times V$ matrix with $\beta_{ij}=p(w^j=1|z^i=1)$
 \end{enumerate}
 \end{enumerate}
-The model is learning with Bayesian inference using collapsed Gibbs Sampling and expectation propagation. As for K, \cite{hoffman2010online} discusses how to choose the number of topics.
+Learning is performed with Bayesian inference, e.g. by using collapsed Gibbs Sampling and expectation propagation. As for K, \cite{hoffman2010online} discusses how to choose the number of topics.
 Given the computed model, we can predict the topic of a word or query using Bayes Theorem.
-We chose 100 for K.
 
+
+\subsubsection{Extended language model}
+The simple recurrent neural network language model consists of an input layer, a hidden layer with recurrent connections that maintains a representations of the sentence history, and an output layer which produces the probability distribution over words.
+We propose a variation of the conventional recurrent language model by extending the basic model with an additional sentence based feature layer that is connected to the output layer. Since this real-valued feature vector stays the same for all words in the current sentence, it is replicated 
+for each word before connected with the output layer. This way, the feature information is retained in the model while the same sentence is processed.
+For the $m$ hidden layers we use LSTM-based layers. 
+Given a sentence $\textbf{w} = \{w_1, w_2, \ldots, w_n\}$, we denote the input representation of a word $w_i$ with $x_i$, which is encoded using 1-of-N coding. The side information $\textbf{f}$ computed for the sentence $\textbf{w}$ with the above mentioned models is duplicated $n$ times, yielding the features vectors $f_1, f_2, \ldots, f_n$. We denote the j-th hidden layer associated with the  $x_i$ with $s^j_i$ and the output layer with $y_i$. Then for the $i$-th word $w_i$ the hidden and output layers are computed as follows:
+\begin{equation}
+\begin{aligned}
+s^1_i = f_1(U_1x_i + W_1s^1_{i-1}) \\
+s^j_i = f_j(U_js^{j-1}_i + W_js^j_{i-1}), j \neq 1 \\
+y_i = g(Vs^m_i + Ff_i)
+\end{aligned}
+\end{equation}
+where $f_i$ represents activation functions, and $g$ the softmax function.
+For training of the network, i.e. finding the weight matrices U, V, W, F, we use stochastic gradient descent according to the negative log-likelihood loss function. We also added an additional link from feature input to first hidden layer, which is shown in Figure \ref{fig:model-extended}.
+
+\begin{figure} 
+\centering 
+\def\svgwidth{\columnwidth}
+\input{model-extended.pdf_tex}
+\caption{Extended recurrent language model with additional feature input $\textbf{f}$ and two LSTM-based hidden layers. The dashed line from the feature input to the first hidden layer represents a later added connection}
+\label{fig:model-extended}
+\end{figure}
 \section{Experiments}
+We evaluated both the factored language model and the extended language model on English-Chinese and English-Romanian language pairs. For each language pair we created the $n$-best list using our phrase-based MT system and used the models as additional feature in rescoring.
+
 \subsection{System Description}
+The baseline system is an in-house implementation of the phrase-based approach. The system is used to generate $n$-best lists on all the available training corpora. In the English-Chinese system is trained on the TED and UN corpus, optimized and rescored on the TED dev2010 and tested on the test2010 corpora.
+The English-Romanian system was trained on the corpora of WMT 2015 Shared Translation Task, optimized on the first half of news-dev 2016 and tested on the second half of news-dev 2016. For rescoring we used in addition a subset of 2000 sentences of the SETimes corpus for further optimization.
+The English-Chinese baseline system uses two word-based language models, and 12 features in total to create an $n$-best list of size 3000.
+The English-Romanian baseline system uses two word-based language models, 2 cluster-based models using 50, 1000 or 1000 clusters, and a POS-based language model. In total 22-23 features were used to generate an $n$-best list of size 300. A full system description can be found in \cite{niehuesusing}.
+For decoding, both language pairs were optimized using minimum error rate training. The same is used for rescoring of English-Chinese, whereas English-Romanian used ListNet to rerank the $n$-best list.
+All RNN-based language models for both language pairs were trained on the target side of the parallel training data. The English-Chinese system used a vocabulary of 10K, while the English-Romanian system used a vocabulary of 5K words. For word level side information we used Wikipedia to extract the word categories as described in \ref{sec:word-level} as input into the factored language model.
+For sentence level side information, as described in \ref{sec:sentence-level}, we additionally used a web-crawled Chinese lexicon from zdict for the English-Chinese system to the show that the model's performance is independent from a specific encyclopedia.
+
+
 \subsection{English-Chinese}
+In the first Experiment of English-Chinese we used the scores of the factored language model in addition to the baseline features, which is shown in Table \ref{tb:zh-factored}. BLEU score improvements over the basic recurrent language model are displayed in brackets. The model the uses both words and Wikipedia categories achieves an increase of 0.66 BLEU score points in testing on the basic recurrent model that only uses words as input. Combining this model with the scores of a factored model with words and POS as factors produces a further increase of 0.14 points, resulting in an overall improvement of 0.84 BLEU points over the basic recurrent model.
+
+
+
+
+\begin{table} 
+  \caption{Model Perplexities}
+  \centering
+  \begin{tabular}{ ll}
+  	\hline
+  	experiment          & PPL    \\ \hline\hline
+  	RNNLM               & 128.17 \\ \hline
+  	Factored LM POS     & 110.86 \\
+  	Factored LM Cat     & 109.73 \\
+  	Factored LM Cat+POS & 110.38 \\ \hline
+  	WIKI                & 120.60 \\
+  	ZDICT               & 118.85 \\ \hline
+  \end{tabular}
+  \label{tb:PPL}
+\end{table}
+
+
+\begin{table}
+\caption{English-Chinese Factored Language Models}
+\centering
+  \begin{tabular}{ lll }
+  	\hline
+  	experiment             & devdata       & testdata      \\ \hline\hline
+  	Baseline               & 14.69         & 17.05         \\
+  	+RNNLM                 & 14.7          & 17.02         \\
+  	+Factored LM POS       & 14.77         & 16.97         \\ \hline
+  	+Factored LM Cat       & 14.89 (+0.12) & 17.63 (+0.66) \\
+  	+Factored LM Cat + POS & 14.75 (-0.02) & 17.81 (+0.84) \\ \hline
+  \end{tabular}
+  \label{tb:zh-factored}
+\end{table}
+
+
+\begin{table}
+\caption{Extended Language Models: Comparison between different encyclopedia sources}
+\centering
+  \begin{tabular}{lll}
+  	\hline
+  	experiment & devdata      & testdata      \\ \hline\hline
+  	Baseline   & 14.69        & 17.05         \\
+  	+RNNLM     & 14.7         & 17.02         \\ \hline
+  	+Wiki      & 14.78(+0.08) & 17.68 (+0.66) \\
+  	+Dict      & 14.91(+0.21) & 17.58(+0.56)  \\ \hline
+  \end{tabular}
+  \label{tb:zh-extended}
+\end{table}
+
+
+\begin{table}
+\caption{Extended Language Models: Overview of different feature vectors}
+\centering
+  \begin{tabular}{lll}
+  	\hline
+  	experiment         & devdata       & testdata      \\ \hline\hline
+  	Baseline+RNNLM     & 14.70         & 17.02         \\ \hline
+  	Baseline+tfidf     & 14.78 (+0.08) & 17.68 (+0.63) \\
+  	Baseline+LSA.tfidf & 14.78 (+0.08) & 17.31 (+0.29) \\
+  	Baseline+LSA.lsa   & 14.83 (+0.13) & 17.80 (+0.78) \\
+  	Baseline+LDA.tfidf & 14.79 (+0.09) & 17.41 (+0.39) \\
+  	Baseline+LDA.lda   & 14.79 (+0.09) & 17.27 (+0.25)
+  \end{tabular}
+\end{table}
+
+\begin{table}
+\caption{Extended Language Models: Connecting feature input with two layers}
+\centering
+  \begin{tabular}{lll}
+  	\hline
+  	experiment          & devdata       & testdata      \\ \hline\hline
+  	Baseline+RNNLM      & 14.70         & 17.02         \\ \hline
+  	Baseline+tfidf      & 14.78 (+0.08) & 17.68 (+0.63) \\
+  	Baseline+both.tfidf & 14.74 (+0.04) & 17.81 (+0.79)
+  \end{tabular}
+\end{table}
+
 \subsection{English-Romanian}
 \section{Conclusion}
 \section{Acknowledgements}

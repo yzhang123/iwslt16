@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.17 (TeX Live 2016) (preloaded format=pdflatex 2016.7.18)  7 SEP 2016 18:11
+This is pdfTeX, Version 3.14159265-2.6-1.40.17 (TeX Live 2016) (preloaded format=pdflatex 2016.7.18)  7 SEP 2016 19:14
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -337,38 +337,40 @@ l.60 ...[rgb]{0,0,0}\makebox(0,0)[lb]{\smash{yi}}}
 (That was another \errmessage.)
 
 )
-Overfull \hbox (7.1002pt too wide) in paragraph at lines 202--212
+Overfull \hbox (7.1002pt too wide) in paragraph at lines 182--192
  [][] 
  []
 
-(./iwslt2015-submission.bbl
+[4 <./model-extended.pdf>] (./iwslt2015-submission.bbl
 Underfull \vbox (badness 10000) has occurred while \output is active []
 
- [4 <./model-extended.pdf>]) [5] (./iwslt2015-submission.aux) ) 
+ [5])
+[6
+
+] (./iwslt2015-submission.aux) ) 
 Here is how much of TeX's memory you used:
- 2664 strings out of 493013
- 35477 string characters out of 6133328
- 104897 words of memory out of 5000000
- 6149 multiletter control sequences out of 15000+600000
+ 2665 strings out of 493013
+ 35520 string characters out of 6133328
+ 102905 words of memory out of 5000000
+ 6150 multiletter control sequences out of 15000+600000
  24474 words of font info for 61 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 40i,8n,26p,989b,322s stack positions out of 5000i,500n,10000p,200000b,80000s
-{/usr/local/texl
-ive/2016/texmf-dist/fonts/enc/dvips/base/8r.enc}</usr/local/texlive/2016/texmf-
-dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb></usr/local/texlive/2016/texmf-d
-ist/fonts/type1/public/amsfonts/cm/cmmi7.pfb></usr/local/texlive/2016/texmf-dis
-t/fonts/type1/public/amsfonts/cm/cmr10.pfb></usr/local/texlive/2016/texmf-dist/
-fonts/type1/public/amsfonts/cm/cmr7.pfb></usr/local/texlive/2016/texmf-dist/fon
-ts/type1/public/amsfonts/cm/cmsy10.pfb></usr/local/texlive/2016/texmf-dist/font
-s/type1/public/amsfonts/cm/cmsy7.pfb></usr/local/texlive/2016/texmf-dist/fonts/
-type1/urw/courier/ucrr8a.pfb></usr/local/texlive/2016/texmf-dist/fonts/type1/ur
-w/times/utmb8a.pfb></usr/local/texlive/2016/texmf-dist/fonts/type1/urw/times/ut
-mr8a.pfb></usr/local/texlive/2016/texmf-dist/fonts/type1/urw/times/utmri8a.pfb>
-
-Output written on iwslt2015-submission.pdf (5 pages, 138764 bytes).
+ 40i,8n,26p,1101b,322s stack positions out of 5000i,500n,10000p,200000b,80000s
+{/usr/local/texlive/2016/texmf-dist/fonts/enc/d
+vips/base/8r.enc}</usr/local/texlive/2016/texmf-dist/fonts/type1/public/amsfont
+s/cm/cmmi10.pfb></usr/local/texlive/2016/texmf-dist/fonts/type1/public/amsfonts
+/cm/cmmi7.pfb></usr/local/texlive/2016/texmf-dist/fonts/type1/public/amsfonts/c
+m/cmr10.pfb></usr/local/texlive/2016/texmf-dist/fonts/type1/public/amsfonts/cm/
+cmr7.pfb></usr/local/texlive/2016/texmf-dist/fonts/type1/public/amsfonts/cm/cms
+y10.pfb></usr/local/texlive/2016/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy
+7.pfb></usr/local/texlive/2016/texmf-dist/fonts/type1/urw/courier/ucrr8a.pfb></
+usr/local/texlive/2016/texmf-dist/fonts/type1/urw/times/utmb8a.pfb></usr/local/
+texlive/2016/texmf-dist/fonts/type1/urw/times/utmr8a.pfb></usr/local/texlive/20
+16/texmf-dist/fonts/type1/urw/times/utmri8a.pfb>
+Output written on iwslt2015-submission.pdf (6 pages, 140466 bytes).
 PDF statistics:
- 64 PDF objects out of 1000 (max. 8388607)
- 45 compressed objects within 1 object stream
+ 67 PDF objects out of 1000 (max. 8388607)
+ 47 compressed objects within 1 object stream
  0 named destinations out of 1000 (max. 500000)
  6 words of extra memory for PDF output out of 10000 (max. 10000000)
 

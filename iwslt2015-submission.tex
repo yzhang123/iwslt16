@@ -174,10 +174,58 @@ For sentence level side information, as described in \ref{sec:sentence-level}, w
 
 
 \subsection{English-Chinese}
-In the first Experiment of English-Chinese we used the scores of the factored language model in addition to the baseline features, which is shown in Table \ref{tb:zh-factored}. BLEU score improvements over the basic recurrent language model are displayed in brackets. The model the uses both words and Wikipedia categories achieves an increase of 0.66 BLEU score points in testing on the basic recurrent model that only uses words as input. Combining this model with the scores of a factored model with words and POS as factors produces a further increase of 0.14 points, resulting in an overall improvement of 0.84 BLEU points over the basic recurrent model.
+In the first Experiment of English-Chinese we used the scores of the factored language model in addition to the baseline features, which is shown in Table \ref{tb:zh-factored}. Only nouns are tagged in this experiment. BLEU score improvements over the basic recurrent language model are displayed in brackets. The model the uses both words and Wikipedia categories achieves an increase of 0.66 BLEU score points in testing on the basic recurrent model that only uses words as input. Combining this model with the scores of a factored model with words and POS as factors produces a further increase of 0.14 points, resulting in an overall improvement of 0.84 BLEU points over the basic recurrent model.
 
+\begin{table}
+\caption{English-Chinese Factored Language Models}
+\centering
+  \begin{tabular}{ lll }
+  	\hline
+  	experiment             & devdata       & testdata      \\ \hline\hline
+  	Baseline               & 14.69         & 17.05         \\
+  	+RNNLM                 & 14.7          & 17.02         \\
+  	+Factored LM POS       & 14.77         & 16.97         \\ \hline
+  	+Factored LM Cat       & 14.89 (+0.12) & 17.63 (+0.66) \\
+  	+Factored LM Cat + POS & 14.75 (-0.02) & 17.81 (+0.84) \\ \hline
+  \end{tabular}
+  \label{tb:zh-factored}
+\end{table}
 
+In a second experiment, extended language models using different methods to compute the feature input vector are studied. Tfidf, LSA and LDA are used for similar document ranking as well as vector representation. It is worth mentioning that the method for ranking can be paired with different one for representation. The performance results of various combinations of pairings are presented in Table \ref{tb:zh-extended-diff-features}. Although all combinations result in better rescoring performance compared to the basic recurrent model, in most cases choosing the same method for both tasks achieve a noticeable higher boost. For example, tfidf creates an increase of 0.63 points on the basic recurrent model, LSA an increase of 0.78. The only exception to this rule is LDA. One reason for this could be suboptimal parameter picks for this generally more complex generative model. Despite the slightly better performance of LSA, tfidf is employed in the following experiments due to its simplicity and, thus, faster training and evaluation.
 
+\begin{table}
+\caption{Extended Language Models: Overview of different feature vectors}
+\centering
+  \begin{tabular}{lll}
+  	\hline
+  	experiment           & devdata       & testdata      \\ \hline\hline
+  	Baseline+RNNLM       & 14.70         & 17.02         \\ \hline
+  	Baseline+TFIDF.tfidf & 14.78 (+0.08) & 17.68 (+0.63) \\
+  	Baseline+LSA.tfidf   & 14.78 (+0.08) & 17.31 (+0.29) \\
+  	Baseline+LSA.lsa     & 14.83 (+0.13) & 17.80 (+0.78) \\
+  	Baseline+LDA.tfidf   & 14.79 (+0.09) & 17.41 (+0.39) \\
+  	Baseline+LDA.lda     & 14.79 (+0.09) & 17.27 (+0.25)
+  \end{tabular}
+  \label{tb:zh-extended-diff-features}
+\end{table}
+
+In order to test the efficiency of this model independent from Wikipedia specific characteristics, a Chinese lexicon is crawled from zdict. It contrasts Wikipedia in the variety of definition entries and the length of the content. In fact, zdict provides more but shorter compact definitions for all type of words, particularly verbs. Table \ref{tb:zh-extended-diff-sources} shows an increase of 0.56 BLEU points using zdict documents.
+
+\begin{table}
+\caption{Extended Language Models: Comparison between different encyclopedia sources}
+\centering
+  \begin{tabular}{lll}
+  	\hline
+  	experiment & devdata       & testdata      \\ \hline\hline
+  	Baseline   & 14.69         & 17.05         \\
+  	+RNNLM     & 14.7          & 17.02         \\ \hline
+  	+Wiki      & 14.78 (+0.08) & 17.68 (+0.66) \\
+  	+Dict      & 14.91 (+0.21) & 17.58 (+0.56) \\ \hline
+  \end{tabular}
+  \label{tb:zh-extended-diff-sources}
+\end{table}
+
+An overview of all the models and their perplexities is given in Table \ref{tb:PPL}. All models show an evident reduction in perplexity compared to the basic recurrent model, which goes along with the previous rescoring results.
 
 \begin{table} 
   \caption{Model Perplexities}
@@ -195,52 +243,8 @@ In the first Experiment of English-Chinese we used the scores of the factored la
   \label{tb:PPL}
 \end{table}
 
+In \ref{tb:zh-extended-both} 
 
-\begin{table}
-\caption{English-Chinese Factored Language Models}
-\centering
-  \begin{tabular}{ lll }
-  	\hline
-  	experiment             & devdata       & testdata      \\ \hline\hline
-  	Baseline               & 14.69         & 17.05         \\
-  	+RNNLM                 & 14.7          & 17.02         \\
-  	+Factored LM POS       & 14.77         & 16.97         \\ \hline
-  	+Factored LM Cat       & 14.89 (+0.12) & 17.63 (+0.66) \\
-  	+Factored LM Cat + POS & 14.75 (-0.02) & 17.81 (+0.84) \\ \hline
-  \end{tabular}
-  \label{tb:zh-factored}
-\end{table}
-
-
-\begin{table}
-\caption{Extended Language Models: Comparison between different encyclopedia sources}
-\centering
-  \begin{tabular}{lll}
-  	\hline
-  	experiment & devdata      & testdata      \\ \hline\hline
-  	Baseline   & 14.69        & 17.05         \\
-  	+RNNLM     & 14.7         & 17.02         \\ \hline
-  	+Wiki      & 14.78(+0.08) & 17.68 (+0.66) \\
-  	+Dict      & 14.91(+0.21) & 17.58(+0.56)  \\ \hline
-  \end{tabular}
-  \label{tb:zh-extended}
-\end{table}
-
-
-\begin{table}
-\caption{Extended Language Models: Overview of different feature vectors}
-\centering
-  \begin{tabular}{lll}
-  	\hline
-  	experiment         & devdata       & testdata      \\ \hline\hline
-  	Baseline+RNNLM     & 14.70         & 17.02         \\ \hline
-  	Baseline+tfidf     & 14.78 (+0.08) & 17.68 (+0.63) \\
-  	Baseline+LSA.tfidf & 14.78 (+0.08) & 17.31 (+0.29) \\
-  	Baseline+LSA.lsa   & 14.83 (+0.13) & 17.80 (+0.78) \\
-  	Baseline+LDA.tfidf & 14.79 (+0.09) & 17.41 (+0.39) \\
-  	Baseline+LDA.lda   & 14.79 (+0.09) & 17.27 (+0.25)
-  \end{tabular}
-\end{table}
 
 \begin{table}
 \caption{Extended Language Models: Connecting feature input with two layers}
@@ -249,9 +253,10 @@ In the first Experiment of English-Chinese we used the scores of the factored la
   	\hline
   	experiment          & devdata       & testdata      \\ \hline\hline
   	Baseline+RNNLM      & 14.70         & 17.02         \\ \hline
-  	Baseline+tfidf      & 14.78 (+0.08) & 17.68 (+0.63) \\
-  	Baseline+both.tfidf & 14.74 (+0.04) & 17.81 (+0.79)
+  	Baseline+TFIDF      & 14.78 (+0.08) & 17.68 (+0.63) \\
+  	Baseline+2Con TFIDF & 14.74 (+0.04) & 17.81 (+0.79)
   \end{tabular}
+  \label{tb:zh-extended-both}
 \end{table}
 
 \subsection{English-Romanian}

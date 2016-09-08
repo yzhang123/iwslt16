@@ -164,24 +164,24 @@ For training of the network, i.e. finding the weight matrices U, V, W, F, we use
 We evaluated both the factored language model and the extended language model on English-Chinese and English-Romanian language pairs. For each language pair we created the $n$-best list using our phrase-based MT system and used the models as additional feature in rescoring.
 
 \subsection{System Description}
-The baseline system is an in-house implementation of the phrase-based approach. The system is used to generate $n$-best lists on all the available training corpora. In the English-Chinese system is trained on the TED and UN corpus, optimized and rescored on the TED dev2010 and tested on the test2010 corpora.
-The English-Romanian system was trained on the corpora of WMT 2015 Shared Translation Task, optimized on the first half of news-dev 2016 and tested on the second half of news-dev 2016. For rescoring we used in addition a subset of 2000 sentences of the SETimes corpus for further optimization.
+The baseline system is an in-house implementation of the phrase-based approach and is used to generate $n$-best lists on all the available training data. The English-Chinese system is trained on the TED and UN corpus, optimized and rescored on the TED dev2010 and tested on the test2010 corpora.
+The English-Romanian system was trained on the corpora of WMT 2015 Shared Translation Task, optimized on the first half of news-dev 2016 and tested on the second half of news-dev 2016. In addition, for rescoring a subset of 2000 sentences of the SETimes corpus was used for further optimization.
 The English-Chinese baseline system uses two word-based language models, and 12 features in total to create an $n$-best list of size 3000.
 The English-Romanian baseline system uses two word-based language models, 2 cluster-based models using 50, 1000 or 1000 clusters, and a POS-based language model. In total 22-23 features were used to generate an $n$-best list of size 300. A full system description can be found in \cite{niehuesusing}.
 For decoding, both language pairs were optimized using minimum error rate training. The same is used for rescoring of English-Chinese, whereas English-Romanian used ListNet to rerank the $n$-best list.
-All RNN-based language models for both language pairs were trained on the target side of the parallel training data. The English-Chinese system used a vocabulary of 10K, while the English-Romanian system used a vocabulary of 5K words. For word level side information we used Wikipedia to extract the word categories as described in \ref{sec:word-level} as input into the factored language model.
-For sentence level side information, as described in \ref{sec:sentence-level}, we additionally used a web-crawled Chinese lexicon from zdict for the English-Chinese system to the show that the model's performance is independent from a specific encyclopedia.
+All RNN-based language models for both language pairs were trained on the target side of the parallel training data. The English-Chinese system uses a vocabulary of 10K, while the English-Romanian system uses a vocabulary of 5K words. For word level side information we used Wikipedia to extract the word categories as described in \ref{sec:word-level} as input into the factored language model.
+For sentence level side information, as described in \ref{sec:sentence-level}, we additionally used a web-crawled Chinese lexicon from zdict for the English-Chinese system to show the model's performance independently from a specific encyclopedia.
 
 
 \subsection{English-Chinese}
-In the first Experiment of English-Chinese we used the scores of the factored language model in addition to the baseline features, which is shown in Table \ref{tb:zh-factored}. Only nouns are tagged in this experiment. BLEU score improvements over the basic recurrent language model are displayed in brackets. The model the uses both words and Wikipedia categories achieves an increase of 0.66 BLEU score points in testing on the basic recurrent model that only uses words as input. Combining this model with the scores of a factored model with words and POS as factors produces a further increase of 0.14 points, resulting in an overall improvement of 0.84 BLEU points over the basic recurrent model.
+In the first experiment of English-Chinese we used the scores of the factored language model in addition to the baseline features, which is shown in Table \ref{tb:zh-factored}. Since Chinese is a sparsely inflected language, it was sufficient to only tag nouns and names in this experiment. BLEU score improvements over the basic recurrent language model are displayed in brackets. When using both words and Wikipedia categories the model performs 0.66 BLEU score points better in testing than the basic recurrent model using only words as input. Combining this model with the scores of a factored model with words and POS as factors produces a further increase of 0.14 points, resulting in an overall improvement of 0.84 BLEU points over the basic recurrent model.
 
 \begin{table}
 \caption{English-Chinese Factored Language Models}
 \centering
   \begin{tabular}{ lll }
   	\hline
-  	experiment             & devdata       & testdata      \\ \hline\hline
+  	Model                  & devdata       & testdata      \\ \hline\hline
   	Baseline               & 14.69         & 17.05         \\
   	+RNNLM                 & 14.7          & 17.02         \\
   	+Factored LM POS       & 14.77         & 16.97         \\ \hline
@@ -191,14 +191,14 @@ In the first Experiment of English-Chinese we used the scores of the factored la
   \label{tb:zh-factored}
 \end{table}
 
-In a second experiment, extended language models using different methods to compute the feature input vector are studied. Tfidf, LSA and LDA are used for similar document ranking as well as vector representation. It is worth mentioning that the method for ranking can be paired with different one for representation. The performance results of various combinations of pairings are presented in Table \ref{tb:zh-extended-diff-features}. Although all combinations result in better rescoring performance compared to the basic recurrent model, in most cases choosing the same method for both tasks achieve a noticeable higher boost. For example, tfidf creates an increase of 0.63 points on the basic recurrent model, LSA an increase of 0.78. The only exception to this rule is LDA. One reason for this could be suboptimal parameter picks for this generally more complex generative model. Despite the slightly better performance of LSA, tfidf is employed in the following experiments due to its simplicity and, thus, faster training and evaluation.
+In a second experiment, extended language models using different methods to compute the feature input vector are studied. Tfidf, LSA and LDA are used for similar document ranking as well as vector representation. It is worth mentioning that the method for ranking can be paired with a different choice for representation. The performance results of various combinations of pairings are presented in Table \ref{tb:zh-extended-diff-features}. Although all combinations result in better rescoring performance compared to the basic recurrent model, in most cases choosing the same method for both tasks achieve a noticeable higher boost. For example, tfidf creates an increase of 0.63 points on the basic recurrent model, LSA an increase of 0.78. The only exception to this rule is LDA. One reason for this could be suboptimal parameter picks for this generally more complex generative model. Despite the slightly better performance of LSA, tfidf is employed in the following experiments due to its simplicity and, thus, faster training and evaluation.
 
 \begin{table}
 \caption{Extended Language Models: Overview of different feature vectors}
 \centering
   \begin{tabular}{lll}
   	\hline
-  	experiment           & devdata       & testdata      \\ \hline\hline
+  	Model                & devdata       & testdata      \\ \hline\hline
   	Baseline+RNNLM       & 14.70         & 17.02         \\ \hline
   	Baseline+TFIDF.tfidf & 14.78 (+0.08) & 17.68 (+0.63) \\
   	Baseline+LSA.tfidf   & 14.78 (+0.08) & 17.31 (+0.29) \\
@@ -209,30 +209,30 @@ In a second experiment, extended language models using different methods to comp
   \label{tb:zh-extended-diff-features}
 \end{table}
 
-In order to test the efficiency of this model independent from Wikipedia specific characteristics, a Chinese lexicon is crawled from zdict. It contrasts Wikipedia in the variety of definition entries and the length of the content. In fact, zdict provides more but shorter compact definitions for all type of words, particularly verbs. Table \ref{tb:zh-extended-diff-sources} shows an increase of 0.56 BLEU points using zdict documents.
+In order to test the efficiency of this model independently from the characteristics of the  underlying encyclopedia  source, a Chinese lexicon is crawled from zdict. It contrasts Wikipedia in the variety and length of definitions. In fact, zdict provides more but shorter compact explanations for all type of words, particularly verbs. Despite the difference in content, the use of zdict documents shows an increase of 0.56 BLEU points, similar to that of Wikipedia as shown in Table \ref{tb:zh-extended-diff-sources}.
 
 \begin{table}
 \caption{Extended Language Models: Comparison between different encyclopedia sources}
 \centering
   \begin{tabular}{lll}
   	\hline
-  	experiment & devdata       & testdata      \\ \hline\hline
-  	Baseline   & 14.69         & 17.05         \\
-  	+RNNLM     & 14.7          & 17.02         \\ \hline
-  	+Wiki      & 14.78 (+0.08) & 17.68 (+0.66) \\
-  	+Dict      & 14.91 (+0.21) & 17.58 (+0.56) \\ \hline
+  	Model    & devdata       & testdata      \\ \hline\hline
+  	Baseline & 14.69         & 17.05         \\
+  	+RNNLM   & 14.7          & 17.02         \\ \hline
+  	+Wiki    & 14.78 (+0.08) & 17.68 (+0.66) \\
+  	+Dict    & 14.91 (+0.21) & 17.58 (+0.56) \\ \hline
   \end{tabular}
   \label{tb:zh-extended-diff-sources}
 \end{table}
 
-An overview of all the models and their perplexities is given in Table \ref{tb:PPL}. All models show an evident reduction in perplexity compared to the basic recurrent model, which goes along with the previous rescoring results.
+An overview of all the models and their perplexities is given in Table \ref{tb:PPL}. All models exhibit an evident reduction in perplexity compared to the basic recurrent model, which goes along with the previous rescoring results.
 
 \begin{table} 
   \caption{Model Perplexities}
   \centering
   \begin{tabular}{ ll}
   	\hline
-  	experiment          & PPL    \\ \hline\hline
+  	Model               & PPL    \\ \hline\hline
   	RNNLM               & 128.17 \\ \hline
   	Factored LM POS     & 110.86 \\
   	Factored LM Cat     & 109.73 \\
@@ -243,7 +243,8 @@ An overview of all the models and their perplexities is given in Table \ref{tb:P
   \label{tb:PPL}
 \end{table}
 
-In \ref{tb:zh-extended-both} 
+
+As indicated by Figure \ref{fig:model-extended}, an additional connection was established between the feature layer and the first hidden layer in another experiment. Using tfidf the model gained a small increase of +0.16 BLEU on the model with single connection and a total of +0.79 BLEU on the simple recurrent model, as shown in Table \ref{tb:zh-extended-both}.
 
 
 \begin{table}
@@ -251,7 +252,7 @@ In \ref{tb:zh-extended-both}
 \centering
   \begin{tabular}{lll}
   	\hline
-  	experiment          & devdata       & testdata      \\ \hline\hline
+  	Model               & devdata       & testdata      \\ \hline\hline
   	Baseline+RNNLM      & 14.70         & 17.02         \\ \hline
   	Baseline+TFIDF      & 14.78 (+0.08) & 17.68 (+0.63) \\
   	Baseline+2Con TFIDF & 14.74 (+0.04) & 17.81 (+0.79)
@@ -259,9 +260,55 @@ In \ref{tb:zh-extended-both}
   \label{tb:zh-extended-both}
 \end{table}
 
+
 \subsection{English-Romanian}
+Unlike Chinese Romanian is a morphologically rich language which is why investigated tagging only nouns and all word types in parallel for the first task. 
+In previous work \cite{niehuesusing}, the factored language model for English-Romanian integrated four factors: the word's surface form, POS, and word clusters with 100 and 1000 class respectively. Our experiment builds on top of \cite{niehuesusing}, which used for all systems a vocabulary of 5K, and the same denotations are used to illustrate the following results. In the first experiment, only the factored language models are evaluated without the baseline system. The system from the previous work with all four factors as input and prediction reached a BLEU score of 28.54, as shown in Table \ref{tb:ro-factored-single}. This model will serve as reference for our models. After adding our extracted Wikipedia word categories to the factors, we achieved improvement of 0.17 and 0.30 BLEU points respectively.
+
+
+\begin{table}
+\caption{Factored Language Models: Single Scores}
+\centering
+  \begin{tabular}{lll}
+  	\hline
+  	Input            & Prediction   & Single        \\ \hline\hline
+  	Word             & Word         & 27.88         \\
+  	All factors      & All factors  & 28.54         \\ \hline
+  	+Cat (Nouns)     & +Cat (Nouns) & 28.71 (+0.17) \\
+  	+Cat (All Words) & +Cat (All)   & 28.84 (+0.30)
+  \end{tabular}
+  \label{tb:ro-factored-single}
+\end{table}
+
+Table \ref{tb:ro-factored-combi} shows the results of model features used in addition to the baseline system in three configurations, which are evaluated using just the joint probability. 
+Adding word tags for all word types achieved an improvement of about 0.1 BLEU points in two configurations over the reference model.
+
+\begin{table}
+\caption{Factored Language Models: End Scores}
+\centering
+  \begin{tabular}{llll}
+  	\hline
+  	Model                    & Conf1   & Conf2   & Conf3   \\ \hline\hline
+  	Baseline                 & 29.86   & 30.00   & 29.75   \\
+  	+All factors             & 29.94   & 30.01   & 30.01   \\ \hline
+  	+All factors + Nouns     & 29.94   & 30.31   & 29.99   \\
+  	                         & (+0.00) & (+0.30) & (-0.02) \\
+  	+All factors + All Words & 29.95   & 30.13   & 30.14   \\
+  	                         & (+0.01) & (+0.12) & (+0.13)
+  \end{tabular}
+  \label{tb:ro-factored-combi}
+\end{table}
+
+
 \section{Conclusion}
+In this work, we proposed two approaches to integrate higher level information from encyclopediatic sources into neural network language models. The first takes advantage of Wikipedia, which is one of the fastest growing encyclopedias. The second approach takes a continuous space vectors as additional input which enables incorporation of more complex side information on the sentence level. In addition, we  also introduce three different methods how to prepare the additional data and represent it in the correct form.
+By using of more complex information from large independent sources, we have improved the translation system on two different language pairs.  
+This work plays a key role for low-ressource languages, that often lack sufficient training data. 
+
+
+
 \section{Acknowledgements}
+This work was funded by the CLICS Exchange Program.
 
 \begin{comment}
 

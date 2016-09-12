@@ -116,7 +116,7 @@ For training we used the factored language model proposed in \cite{niehuesusing}
 The idea to use a dedicated topic vector is motivated by a more flexible representation of information and methods that are capable of drawing correlations betweens words independent of their distance.
 For example, the sentence 
 \begin{align}
-\text{``Columns are articles written by journalist''}
+\text{``Columns are articles written by journalists''}
 \end{align}
 exhibits several problems in the previous approaches. First, when translated into a low-ressource languages, e.g. Romanian, some of the topic words do not have their own Wikipedia entries, so we cannot take full advantage of the first approach. Second, the contextual word of ``columns'' appears later in the sentence, thus recurrent approaches only considering the earlier context will fail. 
 In this approach, we use the main words in the entire sentence, unlike \cite{mikolov2012context}, to create the topic vector by search through the contents of Wikipedia articles to find topic-related articles, e.g. news related articles. By compressing the information of these articles into a vector which is associated with each word, we can improve the translation of single words by considering global topic information spanning neighboring words. 

@@ -84,19 +84,19 @@ possible to determine only from their respective phrases in isolation
 \subsection{Word Level Information} \label{sec:word-level}
 The motivation behind using general word categories from Wikipedia to associate with words is to strengthen the relatedness of words in sentences that are correct translations but have a low score due to the translation model. 
 \begin{align}
-\text{``A journalist writes articles called columns''}
+\text{``A journalist writes articles for columns''}
 \end{align}
 Both of the following hypotheses, as shown in Example \ref{ex:wiki-cat}, are possible translation candidates in decoding:
 \begin{mylist}
 \caption{Two hypothese tagged with Wikipedia categories}
 \begin{enumerate}
-\item $\uch{一}{CD}$ $\uch{位}{M}$$\uch{记者}{新闻 (=news)}$ $\uch{写的}{VV}$ $\uch{文章}{作品}$ $\uch{被}{SB}$ $\uch{称为}{VV}$ $\uch{柱子}{新闻(=news)}$ 
-\item $\uch{一}{CD}$ $\uch{位}{M}$$\uch{记者}{新闻 (=news)}$ $\uch{写的}{VV}$ $\uch{文章}{作品}$ $\uch{被}{SB}$ $\uch{称为}{VV}$ $\uch{专栏}{建筑(=archit.)}$ 	
+\item $\uch{一}{CD}$ $\uch{位}{M}$ $\uch{记者}{新闻 (=news)}$ $\uch{给}{SB}$　$\uch{柱子}{建筑(=archit.)}$ $\uch{写}{VV}$ $\uch{文章}{作品}$  
+\item $\uch{一}{CD}$ $\uch{位}{M}$ $\uch{记者}{新闻 (=news)}$ $\uch{写的}{VV}$ $\uch{文章}{作品}$ $\uch{被}{SB}$ $\uch{称为}{VV}$ $\uch{专栏}{新闻(=news)}$ 	
 \end{enumerate}
 \label{ex:wiki-cat}
 \end{mylist}
 
- Even though the second translation is obviously the correct one, because column in the context of journalist and article refers to a newspaper area, the first translation is more likely according to the translation model since generally a column describes more often a pillar than an article. Since the main contextual reference of column, which is article, is several words apart, translation tasks where the data does not originate from news or similar domains, or in case the data is so constrained in size that it has never seen the words ``column'' and ``journalist'' in the same context, the language model will fail to choose the correct translation.
+ Even though the second translation is obviously the correct one, because column in the context of journalist and article refers to a newspaper section, the first translation is more likely according to the translation model since generally a column describes more often a pillar than an article. Since the main contextual reference of column, which is article, is several words apart, translation tasks where the data does not originate from news or similar domains, or in case the data is so constrained in size that it has never seen the words ``column'' and ``journalist'' in the same context, the language model will fail to choose the correct translation.
 Out approach solves this problem by tagging the nouns in the sentence with according Wikipedia categories. By doing so, the bond between column and journalist is reinforced by the their common factor which contributes to a higher score for the correct translation. 
 
 
@@ -116,7 +116,7 @@ For training we used the factored language model proposed in \cite{niehuesusing}
 The idea to use a dedicated topic vector is motivated by a more flexible representation of information and methods that are capable of drawing correlations betweens words independent of their distance.
 For example, the sentence 
 \begin{align}
-\text{``Columns are articles written by journalists''}
+\text{``Columns contain articles written by journalists''}
 \end{align}
 exhibits several problems in the previous approaches. First, when translated into a low-ressource languages, e.g. Romanian, some of the topic words do not have their own Wikipedia entries, so we cannot take full advantage of the first approach. Second, the contextual word of ``columns'' appears later in the sentence, thus recurrent approaches only considering the earlier context will fail. 
 In this approach, we use the main words in the entire sentence, unlike \cite{mikolov2012context}, to create the topic vector by search through the contents of Wikipedia articles to find topic-related articles, e.g. news related articles. By compressing the information of these articles into a vector which is associated with each word, we can improve the translation of single words by considering global topic information spanning neighboring words. 

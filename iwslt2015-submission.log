@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.17 (TeX Live 2016) (preloaded format=pdflatex 2016.7.18)  12 SEP 2016 17:57
+This is pdfTeX, Version 3.14159265-2.6-1.40.17 (TeX Live 2016) (preloaded format=pdflatex 2016.7.27)  12 SEP 2016 18:46
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -928,6 +928,21 @@ File: UTF8.enc 2015/04/18 4.8.4
 (/usr/local/texlive/2016/texmf-dist/tex/latex/cjk/texinput/UTF8/UTF8.chr
 File: UTF8.chr 2015/04/18 4.8.4
 )
+
+! Package inputenc Error: Unicode char 　 (U+3000)
+(inputenc)                not set up for use with LaTeX.
+
+See the inputenc package documentation for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.93 ...��者}{新闻 (=news)}$ $\uch{给}{SB}$　
+                                                  %$\uch{柱子}{建筑(=arc...
+
+Your command was ignored.
+Type  I <command> <return>  to replace it with another command,
+or  <return>  to continue without it.
+
 (/usr/local/texlive/2016/texmf-dist/tex/latex/cjk/texinput/UTF8/UTF8.enc
 File: UTF8.enc 2015/04/18 4.8.4
 )
@@ -1312,203 +1327,11 @@ File: UTF8.enc 2015/04/18 4.8.4
 (/usr/local/texlive/2016/texmf-dist/tex/latex/cjk/texinput/UTF8/UTF8.chr
 File: UTF8.chr 2015/04/18 4.8.4
 )
-(/usr/local/texlive/2016/texmf-dist/tex/latex/cjk/texinput/UTF8/UTF8.enc
-File: UTF8.enc 2015/04/18 4.8.4
-)
-(/usr/local/texlive/2016/texmf-dist/tex/latex/cjk/texinput/UTF8/UTF8.chr
-File: UTF8.chr 2015/04/18 4.8.4
-)
-(/usr/local/texlive/2016/texmf-dist/tex/latex/cjk/texinput/UTF8/UTF8.enc
-File: UTF8.enc 2015/04/18 4.8.4
-)
-(/usr/local/texlive/2016/texmf-dist/tex/latex/cjk/texinput/UTF8/UTF8.chr
-File: UTF8.chr 2015/04/18 4.8.4
-)
-(/usr/local/texlive/2016/texmf-dist/tex/latex/cjk/texinput/UTF8/UTF8.enc
-File: UTF8.enc 2015/04/18 4.8.4
-)
-(/usr/local/texlive/2016/texmf-dist/tex/latex/cjk/texinput/UTF8/UTF8.chr
-File: UTF8.chr 2015/04/18 4.8.4
-)
-(/usr/local/texlive/2016/texmf-dist/tex/latex/cjk/texinput/UTF8/UTF8.enc
-File: UTF8.enc 2015/04/18 4.8.4
-)
-(/usr/local/texlive/2016/texmf-dist/tex/latex/cjk/texinput/UTF8/UTF8.chr
-File: UTF8.chr 2015/04/18 4.8.4
-)
-(/usr/local/texlive/2016/texmf-dist/tex/latex/cjk/texinput/UTF8/UTF8.enc
-File: UTF8.enc 2015/04/18 4.8.4
-)
-(/usr/local/texlive/2016/texmf-dist/tex/latex/cjk/texinput/UTF8/UTF8.chr
-File: UTF8.chr 2015/04/18 4.8.4
-)
-(/usr/local/texlive/2016/texmf-dist/tex/latex/cjk/texinput/UTF8/UTF8.enc
-File: UTF8.enc 2015/04/18 4.8.4
-)
-(/usr/local/texlive/2016/texmf-dist/tex/latex/cjk/texinput/UTF8/UTF8.chr
-File: UTF8.chr 2015/04/18 4.8.4
-)
-(/usr/local/texlive/2016/texmf-dist/tex/latex/cjk/texinput/UTF8/UTF8.enc
-File: UTF8.enc 2015/04/18 4.8.4
-)
-(/usr/local/texlive/2016/texmf-dist/tex/latex/cjk/texinput/UTF8/UTF8.chr
-File: UTF8.chr 2015/04/18 4.8.4
-)
-(/usr/local/texlive/2016/texmf-dist/tex/latex/cjk/texinput/UTF8/UTF8.enc
-File: UTF8.enc 2015/04/18 4.8.4
-)
-(/usr/local/texlive/2016/texmf-dist/tex/latex/cjk/texinput/UTF8/UTF8.chr
-File: UTF8.chr 2015/04/18 4.8.4
-)
-(/usr/local/texlive/2016/texmf-dist/tex/latex/cjk/texinput/UTF8/UTF8.enc
-File: UTF8.enc 2015/04/18 4.8.4
-)
-(/usr/local/texlive/2016/texmf-dist/tex/latex/cjk/texinput/UTF8/UTF8.chr
-File: UTF8.chr 2015/04/18 4.8.4
-)
-(/usr/local/texlive/2016/texmf-dist/tex/latex/cjk/texinput/UTF8/UTF8.enc
-File: UTF8.enc 2015/04/18 4.8.4
-)
-(/usr/local/texlive/2016/texmf-dist/tex/latex/cjk/texinput/UTF8/UTF8.chr
-File: UTF8.chr 2015/04/18 4.8.4
-)
-(/usr/local/texlive/2016/texmf-dist/tex/latex/cjk/texinput/UTF8/UTF8.enc
-File: UTF8.enc 2015/04/18 4.8.4
-)
-(/usr/local/texlive/2016/texmf-dist/tex/latex/cjk/texinput/UTF8/UTF8.chr
-File: UTF8.chr 2015/04/18 4.8.4
-)
-(/usr/local/texlive/2016/texmf-dist/tex/latex/cjk/texinput/UTF8/UTF8.enc
-File: UTF8.enc 2015/04/18 4.8.4
-)
-(/usr/local/texlive/2016/texmf-dist/tex/latex/cjk/texinput/UTF8/UTF8.chr
-File: UTF8.chr 2015/04/18 4.8.4
-)
-(/usr/local/texlive/2016/texmf-dist/tex/latex/cjk/texinput/UTF8/UTF8.enc
-File: UTF8.enc 2015/04/18 4.8.4
-)
-(/usr/local/texlive/2016/texmf-dist/tex/latex/cjk/texinput/UTF8/UTF8.chr
-File: UTF8.chr 2015/04/18 4.8.4
-)
-(/usr/local/texlive/2016/texmf-dist/tex/latex/cjk/texinput/UTF8/UTF8.enc
-File: UTF8.enc 2015/04/18 4.8.4
-)
-(/usr/local/texlive/2016/texmf-dist/tex/latex/cjk/texinput/UTF8/UTF8.chr
-File: UTF8.chr 2015/04/18 4.8.4
-)
-(/usr/local/texlive/2016/texmf-dist/tex/latex/cjk/texinput/UTF8/UTF8.enc
-File: UTF8.enc 2015/04/18 4.8.4
-)
-(/usr/local/texlive/2016/texmf-dist/tex/latex/cjk/texinput/UTF8/UTF8.chr
-File: UTF8.chr 2015/04/18 4.8.4
-)
-(/usr/local/texlive/2016/texmf-dist/tex/latex/cjk/texinput/UTF8/UTF8.enc
-File: UTF8.enc 2015/04/18 4.8.4
-)
-(/usr/local/texlive/2016/texmf-dist/tex/latex/cjk/texinput/UTF8/UTF8.chr
-File: UTF8.chr 2015/04/18 4.8.4
-)
-(/usr/local/texlive/2016/texmf-dist/tex/latex/cjk/texinput/UTF8/UTF8.enc
-File: UTF8.enc 2015/04/18 4.8.4
-)
-(/usr/local/texlive/2016/texmf-dist/tex/latex/cjk/texinput/UTF8/UTF8.chr
-File: UTF8.chr 2015/04/18 4.8.4
-)
-(/usr/local/texlive/2016/texmf-dist/tex/latex/cjk/texinput/UTF8/UTF8.enc
-File: UTF8.enc 2015/04/18 4.8.4
-)
-(/usr/local/texlive/2016/texmf-dist/tex/latex/cjk/texinput/UTF8/UTF8.chr
-File: UTF8.chr 2015/04/18 4.8.4
-)
-(/usr/local/texlive/2016/texmf-dist/tex/latex/cjk/texinput/UTF8/UTF8.enc
-File: UTF8.enc 2015/04/18 4.8.4
-)
-(/usr/local/texlive/2016/texmf-dist/tex/latex/cjk/texinput/UTF8/UTF8.chr
-File: UTF8.chr 2015/04/18 4.8.4
-)
-(/usr/local/texlive/2016/texmf-dist/tex/latex/cjk/texinput/UTF8/UTF8.enc
-File: UTF8.enc 2015/04/18 4.8.4
-)
-(/usr/local/texlive/2016/texmf-dist/tex/latex/cjk/texinput/UTF8/UTF8.chr
-File: UTF8.chr 2015/04/18 4.8.4
-)
-(/usr/local/texlive/2016/texmf-dist/tex/latex/cjk/texinput/UTF8/UTF8.enc
-File: UTF8.enc 2015/04/18 4.8.4
-)
-(/usr/local/texlive/2016/texmf-dist/tex/latex/cjk/texinput/UTF8/UTF8.chr
-File: UTF8.chr 2015/04/18 4.8.4
-)
-(/usr/local/texlive/2016/texmf-dist/tex/latex/cjk/texinput/UTF8/UTF8.enc
-File: UTF8.enc 2015/04/18 4.8.4
-)
-(/usr/local/texlive/2016/texmf-dist/tex/latex/cjk/texinput/UTF8/UTF8.chr
-File: UTF8.chr 2015/04/18 4.8.4
-)
-(/usr/local/texlive/2016/texmf-dist/tex/latex/cjk/texinput/UTF8/UTF8.enc
-File: UTF8.enc 2015/04/18 4.8.4
-)
-(/usr/local/texlive/2016/texmf-dist/tex/latex/cjk/texinput/UTF8/UTF8.chr
-File: UTF8.chr 2015/04/18 4.8.4
-)
-(/usr/local/texlive/2016/texmf-dist/tex/latex/cjk/texinput/UTF8/UTF8.enc
-File: UTF8.enc 2015/04/18 4.8.4
-)
-(/usr/local/texlive/2016/texmf-dist/tex/latex/cjk/texinput/UTF8/UTF8.chr
-File: UTF8.chr 2015/04/18 4.8.4
-)
-(/usr/local/texlive/2016/texmf-dist/tex/latex/cjk/texinput/UTF8/UTF8.enc
-File: UTF8.enc 2015/04/18 4.8.4
-)
-(/usr/local/texlive/2016/texmf-dist/tex/latex/cjk/texinput/UTF8/UTF8.chr
-File: UTF8.chr 2015/04/18 4.8.4
-)
-(/usr/local/texlive/2016/texmf-dist/tex/latex/cjk/texinput/UTF8/UTF8.enc
-File: UTF8.enc 2015/04/18 4.8.4
-)
-(/usr/local/texlive/2016/texmf-dist/tex/latex/cjk/texinput/UTF8/UTF8.chr
-File: UTF8.chr 2015/04/18 4.8.4
-)
-(/usr/local/texlive/2016/texmf-dist/tex/latex/cjk/texinput/UTF8/UTF8.enc
-File: UTF8.enc 2015/04/18 4.8.4
-)
-(/usr/local/texlive/2016/texmf-dist/tex/latex/cjk/texinput/UTF8/UTF8.chr
-File: UTF8.chr 2015/04/18 4.8.4
-)
-(/usr/local/texlive/2016/texmf-dist/tex/latex/cjk/texinput/UTF8/UTF8.enc
-File: UTF8.enc 2015/04/18 4.8.4
-)
-(/usr/local/texlive/2016/texmf-dist/tex/latex/cjk/texinput/UTF8/UTF8.chr
-File: UTF8.chr 2015/04/18 4.8.4
-)
-(/usr/local/texlive/2016/texmf-dist/tex/latex/cjk/texinput/UTF8/UTF8.enc
-File: UTF8.enc 2015/04/18 4.8.4
-)
-(/usr/local/texlive/2016/texmf-dist/tex/latex/cjk/texinput/UTF8/UTF8.chr
-File: UTF8.chr 2015/04/18 4.8.4
-)
-(/usr/local/texlive/2016/texmf-dist/tex/latex/cjk/texinput/UTF8/UTF8.enc
-File: UTF8.enc 2015/04/18 4.8.4
-)
-(/usr/local/texlive/2016/texmf-dist/tex/latex/cjk/texinput/UTF8/UTF8.chr
-File: UTF8.chr 2015/04/18 4.8.4
-)
-(/usr/local/texlive/2016/texmf-dist/tex/latex/cjk/texinput/UTF8/UTF8.enc
-File: UTF8.enc 2015/04/18 4.8.4
-)
-(/usr/local/texlive/2016/texmf-dist/tex/latex/cjk/texinput/UTF8/UTF8.chr
-File: UTF8.chr 2015/04/18 4.8.4
-)
-(/usr/local/texlive/2016/texmf-dist/tex/latex/cjk/texinput/UTF8/UTF8.enc
-File: UTF8.enc 2015/04/18 4.8.4
-)
-(/usr/local/texlive/2016/texmf-dist/tex/latex/cjk/texinput/UTF8/UTF8.chr
-File: UTF8.chr 2015/04/18 4.8.4
-)
-Underfull \vbox (badness 1365) has occurred while \output is active []
+Underfull \vbox (badness 1371) has occurred while \output is active []
 
  [2]
 [3] (./model-extended.pdf_tex
-<model-extended.pdf, id=57, 371.66202pt x 447.94467pt>
+<model-extended.pdf, id=51, 371.66202pt x 447.94467pt>
 File: model-extended.pdf Graphic file (type pdf)
 
 <use model-extended.pdf>
@@ -1597,11 +1420,11 @@ m/n/10 .
 
 ] (./iwslt2015-submission.aux) ) 
 Here is how much of TeX's memory you used:
- 5077 strings out of 493013
- 92716 string characters out of 6133328
- 131155 words of memory out of 5000000
- 7895 multiletter control sequences out of 15000+600000
- 43773 words of font info for 117 fonts, out of 8000000 for 9000
+ 4920 strings out of 493013
+ 83192 string characters out of 6133328
+ 130155 words of memory out of 5000000
+ 7878 multiletter control sequences out of 15000+600000
+ 40956 words of font info for 108 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
  40i,13n,28p,1106b,896s stack positions out of 5000i,500n,10000p,200000b,80000s
 {/usr/local/texlive/2016/texmf-dist/fonts/enc/d
@@ -1616,26 +1439,23 @@ mr7.pfb></usr/local/texlive/2016/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy
 /usr/local/texlive/2016/texmf-dist/fonts/type1/arphic/gbsnu/gbsnu4f.pfb></usr/l
 ocal/texlive/2016/texmf-dist/fonts/type1/arphic/gbsnu/gbsnu51.pfb></usr/local/t
 exlive/2016/texmf-dist/fonts/type1/arphic/gbsnu/gbsnu54.pfb></usr/local/texlive
-/2016/texmf-dist/fonts/type1/arphic/gbsnu/gbsnu5b.pfb></usr/local/texlive/2016/
-texmf-dist/fonts/type1/arphic/gbsnu/gbsnu5e.pfb></usr/local/texlive/2016/texmf-
-dist/fonts/type1/arphic/gbsnu/gbsnu65.pfb></usr/local/texlive/2016/texmf-dist/f
-onts/type1/arphic/gbsnu/gbsnu67.pfb></usr/local/texlive/2016/texmf-dist/fonts/t
-ype1/arphic/gbsnu/gbsnu68.pfb></usr/local/texlive/2016/texmf-dist/fonts/type1/a
-rphic/gbsnu/gbsnu76.pfb></usr/local/texlive/2016/texmf-dist/fonts/type1/arphic/
-gbsnu/gbsnu79.pfb></usr/local/texlive/2016/texmf-dist/fonts/type1/arphic/gbsnu/
-gbsnu7a.pfb></usr/local/texlive/2016/texmf-dist/fonts/type1/arphic/gbsnu/gbsnu7
-b.pfb></usr/local/texlive/2016/texmf-dist/fonts/type1/arphic/gbsnu/gbsnu80.pfb>
-</usr/local/texlive/2016/texmf-dist/fonts/type1/arphic/gbsnu/gbsnu88.pfb></usr/
-local/texlive/2016/texmf-dist/fonts/type1/arphic/gbsnu/gbsnu8b.pfb></usr/local/
-texlive/2016/texmf-dist/fonts/type1/arphic/gbsnu/gbsnu95.pfb></usr/local/texliv
-e/2016/texmf-dist/fonts/type1/urw/courier/ucrr8a.pfb></usr/local/texlive/2016/t
-exmf-dist/fonts/type1/urw/times/utmb8a.pfb></usr/local/texlive/2016/texmf-dist/
-fonts/type1/urw/times/utmr8a.pfb></usr/local/texlive/2016/texmf-dist/fonts/type
-1/urw/times/utmri8a.pfb>
-Output written on iwslt2015-submission.pdf (7 pages, 203126 bytes).
+/2016/texmf-dist/fonts/type1/arphic/gbsnu/gbsnu65.pfb></usr/local/texlive/2016/
+texmf-dist/fonts/type1/arphic/gbsnu/gbsnu68.pfb></usr/local/texlive/2016/texmf-
+dist/fonts/type1/arphic/gbsnu/gbsnu76.pfb></usr/local/texlive/2016/texmf-dist/f
+onts/type1/arphic/gbsnu/gbsnu79.pfb></usr/local/texlive/2016/texmf-dist/fonts/t
+ype1/arphic/gbsnu/gbsnu7a.pfb></usr/local/texlive/2016/texmf-dist/fonts/type1/a
+rphic/gbsnu/gbsnu7e.pfb></usr/local/texlive/2016/texmf-dist/fonts/type1/arphic/
+gbsnu/gbsnu80.pfb></usr/local/texlive/2016/texmf-dist/fonts/type1/arphic/gbsnu/
+gbsnu88.pfb></usr/local/texlive/2016/texmf-dist/fonts/type1/arphic/gbsnu/gbsnu8
+b.pfb></usr/local/texlive/2016/texmf-dist/fonts/type1/arphic/gbsnu/gbsnu95.pfb>
+</usr/local/texlive/2016/texmf-dist/fonts/type1/urw/courier/ucrr8a.pfb></usr/lo
+cal/texlive/2016/texmf-dist/fonts/type1/urw/times/utmb8a.pfb></usr/local/texliv
+e/2016/texmf-dist/fonts/type1/urw/times/utmr8a.pfb></usr/local/texlive/2016/tex
+mf-dist/fonts/type1/urw/times/utmri8a.pfb>
+Output written on iwslt2015-submission.pdf (7 pages, 194580 bytes).
 PDF statistics:
- 162 PDF objects out of 1000 (max. 8388607)
- 105 compressed objects within 2 object streams
+ 146 PDF objects out of 1000 (max. 8388607)
+ 96 compressed objects within 1 object stream
  0 named destinations out of 1000 (max. 500000)
- 74 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 62 words of extra memory for PDF output out of 10000 (max. 10000000)
 

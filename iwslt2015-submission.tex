@@ -1,6 +1,12 @@
 \documentclass[a4paper]{article}
 \usepackage{iwslt15,amssymb,amsmath,epsfig}
 \usepackage{verbatim}
+\usepackage{CJKutf8}
+\usepackage{multirow}
+\usepackage{newfloat}
+\DeclareFloatingEnvironment[placement={!ht},name=Example]{mylist}
+\newcommand{\ch}[1]{\begin{CJK}{UTF8}{gbsn}{#1}\end{CJK}}
+\newcommand{\uch}[2]{\underbrace{\text{\ch{#1}}}_{\text{\ch{#2}}}}
 \setcounter{page}{1}
 \sloppy		% better line breaks
 %\ninept
@@ -10,7 +16,7 @@
 
 %% \newcommand{\reg}{\textsuperscript{\textcircled{\textsc r}}}
 
-\title{Integrating Semantic information into Neural Network Language Models}
+\title{Integrating Encyclopedic information into Neural Network Language Models}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% Please make sure to keep technical paper submissions anonymous  !
@@ -37,8 +43,8 @@ Karlsruhe Institute of Technology, Germany \\
 \maketitle
 %
 \begin{abstract}
-Neural models have recently shown big improvements in the performance of low-resource language modeling in phrase-based machine translation. Recurrent language models with different word factors, in particular, were a great success due to their ability to incorporate additional knowledge into the model. In this work, we want to integrate global semantic information extracted from large independent knowledge bases into neural network language models. We propose two approaches for doing this: word class extraction from Wikipedia and sentence level topic modeling. 
-The new resulting models exhibit great potential in counteracting data scarcity problems with additional independent knowledge. This approach of integrating global context information is not restricted to language modeling but can also be easily applied to any model that profits from context or further data resources, e.g. neural machine translation. Using this model has improved rescoring quality of a state-of-the-art phrase-based translation system by ... BLEU points.  We performed experiments on two language pairs.
+Neural models have recently shown big improvements in the performance of phrase-based machine translation. Recurrent language models with different word factors, in particular, were a great success due to their ability to incorporate additional knowledge into the model. In this work, we want to integrate global semantic information extracted from large independent knowledge bases into neural network language models. We propose two approaches for doing this: word class extraction from Wikipedia and sentence level topic modeling. 
+The new resulting models exhibit great potential in counteracting data sparsity problems with additional independent knowledge. This approach of integrating global context information is not restricted to language modeling but can also be easily applied to any model that profits from context or further data resources, e.g. neural machine translation. Using this model has improved rescoring quality of a state-of-the-art phrase-based translation system by ... BLEU points.  We performed experiments on two language pairs.
 
 
 
@@ -47,38 +53,61 @@ The new resulting models exhibit great potential in counteracting data scarcity 
 
 %
 \section{Introduction}
-Recurrent neural network language models have recently shown great improvement in statistical machine translation, both during decoding and rescoring. The use of continuous word representations has achieved better generalizations of the data which effectively lowered data sparseness problems. Furthermore, the recurrent connections are able to model long range dependencies. Yet, most of these models strictly depend on monolingual and parallel data, which is sometimes not available in huge amounts, especially for low-resource languages.
-This has motivated neural network language models that take multiple parallel streams of data as input instead of just the single form of surface words. These so called factors can be used to add additional information, e.g. POS or automatic word clusters, which helps mainly with morphologically rich languages (e.g. Romanian, German). However, so far the use of factors or additional information has been limited in neural network models. Also, in those cases the extra feature only pertained to syntactic or local context knowledge around the current word. Especially for languages with low resources, it is essential to also facilitate the use of other knowledge factors, e.g. encyclopedia knowledge. It is a useful source especially for learning general concepts, even more after the emergence of the Internet has led to an explosion of textual data. These data sources give insights into a variety of human endeavors waiting to be computationally analyzed.
+Recurrent neural network language models have recently shown great improvement in statistical machine translation, both during decoding and rescoring. The use of continuous word representations has achieved better generalizations of the data which effectively lowered data sparseness problems. Furthermore, the recurrent connections are able to model long range dependencies. Yet, most of these models strictly depend on monolingual and parallel data, which is sometimes not available in huge amounts or only for different domains, especially for low-resource languages.
+This has motivated neural network language models that take multiple parallel streams of data as input instead of just the single form of surface words. These so called factors can be used to add additional information, e.g. POS or automatic word clusters, which helps mainly with morphologically rich languages (e.g. Romanian, German). However, so far the additional feature only pertained to syntactic or local context knowledge around the current word. Especially for languages with low resources, it is essential to also facilitate the use of other knowledge sources, e.g. encyclopedia knowledge. It is a useful source especially for learning general concepts, even more after the emergence of the Internet has led to an explosion of textual data. These data sources give insights into a variety of human endeavors waiting to be computationally analyzed.
 In this paper, we study the integration of large independent knowledge bases in the form of encyclopedia, e.g. Wikipedia, into RNN-based language models and propose two solutions. 
-First, we use  the factored model to integrate extracted Wikipedia categories as one of the factors. In order to understand large unstructured datasets great achievements have been attained in latent concept learning in the area of text mining. Techniques include categorization of documents using latent semantic analysis and probabilistic topic modeling. In our case, we used techniques like tfidf, LSA and LDA to compute a real-valued topic vector for each sentence that is fed into the network as additional input. Using word classes and semantic features help both sparsely inflected languages(e.g. English, Chinese) \cite{bilmes2003factored} as well as low-resource languages.
-In the model we use LSTMs to take into account both independent side information and local context information for the model prediction.
+First, we use  the factored model to integrate extracted Wikipedia categories as one of the factors. In order to understand large unstructured datasets great achievements have been attained in latent concept learning in the area of text mining. Techniques include categorization of documents using latent semantic analysis and probabilistic topic modeling. In our case, we used techniques like tfidf, LSA and LDA to compute a real-valued topic vector for each sentence that is fed into the network as additional input. 
+General word class and global topic features are used in combination with local contexts provided by recurrent neural models to improve lexical selection. 
 
 
 \section{Related Work}
 Language models are a critical component of many application systems, e.g. ASR, MT and OCR. However, language models have always faced the problem of data sparseness. Factored Language Models \cite{bilmes2003factored} introduced the use of a bundle of factors associated with a word which outperformed previous n-gram models without expanding the training data. For factors morphs, stems, POS and word class obtained using the SRILM's n-gram-class tool were used. \cite{koehn2007factored} replaced the single feature stream of surface words with multiple factors and integrated it into phrase-based statistical machine translation systems by breaking down the translation model into several steps that pertain to the translation of single factors which are all taken into account when the target word is generated.
 After recurrent neural network models became a success in language modeling \cite{mikolov2010recurrent}, a factored input layer was employed in a model by \cite{wu2012factored} which uses a structured output layer based on word classes that was able to handle vocabulary of arbitrary size.
 Motivated by multi-task learning in NLP, \cite{niehuesusing} proposed a multi-factor recurrent neural network language model which jointly predicts different output factors by mapping the output of the LSTM-layer to as many softmax layers as there are output factors, thus creating multiple distributions at the output layer. In the rescoring of an n-best list, this model can be included as either one additional feature or several features depending on whether the output is treated as a joint probability or individual probabilities.
-One disadvantage of factored input is that additional factors must match the surface words in space. As a consequence, surface words that uses 1-of-n encoding cannot have factors with continuous space representations.
-However, this is often necessary to model more complex structures, e.g. topic distributions. 
-In \cite{mikolov2012context}, a topic-conditioned RNNLM is proposed which takes a real-valued input vector as an additional input in association with each word. This vector is used to convey local context information based on previous sentences using latent dirichlet allocation.
-Often, the meaning of a word cannot be just derived from its preceding words but by content words in the entire sentence or surrounding sentences. 
-However, the model cannot take side information associated with a sentence that contains the current word, which is what we studied in the second part.
+However, a dedicated continuous space vector offers more flexibility and possibility to store additional side information, especially for complex higher-level concepts, e.g. topic distributions. In \cite{mikolov2012context} a first approach to use an additional vector for higher-level concepts was proposed. In their work, a vector instead of a single factor is associated with each word. However, this vector depended only on the  earlier local context of the word, neglecting the influence of the future context on a word's meaning. 
+In fact, often the meaning of a word cannot be just derived from its preceding words but by content words in the entire sentence or surrounding sentences. 
+Topic models play a great role in text mining because they summarize concepts in large amounts of documents into fewer topics by capturing word co-occurence information. Essentially, topic models can be divided into vector space models, e.g. LSA \cite{deerwester1990indexing}, and probability models, e.g. LDA \cite{blei2003latent}. 
+The successful usage of Wikipedia to devise methods for computing semantic relatedness of documents was reported in \cite{gabrilovich2007computing} and \cite{strube2006wikirelate}.
+Graphic models were employed in \cite{han2012entity} to link named entities in text documents by using information extracted from Wikipedia. 
+In \cite{cucerzan2007large},\cite{bunescu2006using} vector space models are employed to resolve word disambiguations based on entities derived from Wikipedia.
+Similar approaches were applied on other knowledge sources, such as WordNet \cite{hearst1992automatic}.
+ 
 
 \section{Integration of Side Information}
-We studied two approaches to integrate encyclopediatic information into neural language models.
-First, we extracted for each word a corresponding label from Wikipedia. For this, we exploite the existing hierarchical page structure of Wikipedia and use the category name of a page as a factor input into the previously described factored neural language model.
-Second, for each sentence a ranking of similar encyclopedia documents is calculated using vector space models, such as tfidf or LSA, and topic models, such as LDA. Based on the same underlying models a feature vector of the most similar documents to the current sentence is computed which is fed into a neural language model as additional input. The second approach is not limited to Wikipedia, but can be applied to any encyclopedia. To show the efficiency of this method independent from the underlying knowledge source we have crawled a Chinese encyclopedia for which we will present the results later on. 
+We studied two approaches to integrate encyclopedic information into neural language models.
+First, we extracted for each word a corresponding label from Wikipedia. For this, we exploited the existing hierarchical page structure of Wikipedia and use the category label of a page as a factor input into the previously described factored neural language model.
+Second, for each sentence a ranking of similar encyclopedia documents is calculated using vector space models, such as tfidf or LSA, and topic models, such as LDA. Based on the same underlying models a feature vector of the most similar documents to the current sentence is computed which is fed into a neural language model as additional input. The second approach is not limited to Wikipedia, but can be applied to any encyclopedia. To show the efficiency of this method independent from the underlying knowledge source we have crawled a Chinese lexicon from zdic.net \footnote{http://www.zdic.net/} for which we will present the results later on. 
+
+Neither was
+possible to determine only from their respective phrases in isolation
 
 \subsection{Word Level Information} \label{sec:word-level}
+The motivation behind using general word categories from Wikipedia to associate with words is to strengthen the relatedness of words in sentences that are correct translations but have a low score due to the translation model. 
+\begin{align}
+\text{``A journalist writes articles called columns''}
+\end{align}
+Both of the following hypotheses, as shown in Example \ref{ex:wiki-cat}, are possible translation candidates in decoding:
+\begin{mylist}
+\caption{Two hypothese tagged with Wikipedia categories}
+\begin{enumerate}
+\item $\uch{一}{CD}$ $\uch{位}{M}$$\uch{记者}{新闻 (=news)}$ $\uch{写的}{VV}$ $\uch{文章}{作品}$ $\uch{被}{SB}$ $\uch{称为}{VV}$ $\uch{柱子}{新闻(=news)}$ 
+\item $\uch{一}{CD}$ $\uch{位}{M}$$\uch{记者}{新闻 (=news)}$ $\uch{写的}{VV}$ $\uch{文章}{作品}$ $\uch{被}{SB}$ $\uch{称为}{VV}$ $\uch{专栏}{建筑(=archit.)}$ 	
+\end{enumerate}
+\label{ex:wiki-cat}
+\end{mylist}
+
+ Even though the second translation is obviously the correct one, because column in the context of journalist and article refers to a newspaper area, the first translation is more likely according to the translation model since generally a column describes more often a pillar than an article. Since the main contextual reference of column, which is article, is several words apart, translation tasks where the data does not originate from news or similar domains, or in case the data is so constrained in size that it has never seen the words ``column'' and ``journalist'' in the same context, the language model will fail to choose the correct translation.
+Out approach solves this problem by tagging the nouns in the sentence with according Wikipedia categories. By doing so, the bond between column and journalist is reinforced by the their common factor which contributes to a higher score for the correct translation. 
+
+
+
 \subsubsection{Input representation}
-A Wikipedia page has an title and is either an article or a category page which encompasses one or multiple pages.
+A Wikipedia page, labeled with a title, is either an article or a category page which encompasses one or multiple pages.
 We define the search space as the set of all page titles. Given a word, we search for the page with the same word as title and retrieve its category which is found at the bottom of the page.
-In case of multiple categories we pick the first one, which is usually the most general one.
-Figure .. gives an example of this.
-In implementation, we utilized the downloadable Wikipedia dump to create a offline mapping of pages and their category. Note that we skip categories that only have one element to reduce the overall number of associated categories. In case no category is found at all, we resort to the part-of-speech tag, a word's default label.
-One typical characteristic of Wikipedia is that most of its articles only refer to a small group lexical categories. For example, there are lots more articles about objects (nouns) than about activities (verbs).
-For this reason, we can significantly minimize the number of category lookups by restricting those to the words of the most common POS groups without taking big losses in model quality. We will show results for looking up every word versus just nouns. \\
-\\
+%In case of multiple categories we pick the first one, which is usually the most general one.
+In implementation, we downloaded the freely available Wikipedia dump to create a mapping of pages and their category offline. Using a threshold for the minimum number of elements in a category, we pick recursively the parent of a category in case it does not meet the requirement, thus reducing the total number of associated articles which performed better in practice. In case no category is found at all, we resort to the default part-of-speech tag of a word.
+One typical characteristic of Wikipedia is that most of its articles only refer to a small group lexical categories. For example, there are lots more articles about objects (nouns) than about activities (verbs). Fortunately, topic words are usually nouns, so it suffices to tag nouns for an improvement in model quality as suggested in  Example \ref{ex:wiki-cat}.
+
 \subsubsection{Factored language model}
 For training we used the factored language model proposed in \cite{niehuesusing}, which takes in one or multiple factors at the input layer and offers the option to factorize output layer. After concatenating the embeddings of the input factors into a single word embedding, this vector is send through one or multiple LSTM-based layers before projected onto the factored output probabilities. The instance of the model we used for our purposes, takes two factors, the surface form and the Wikipedia word category. These are mapped to an embedding vector of size 100, which is the same size as the first LSTM-layer. For the second LSTM-layer we used 200 nodes. We only used one factor for the output, the surface form of the next word.
 

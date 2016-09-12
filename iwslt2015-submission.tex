@@ -113,7 +113,14 @@ For training we used the factored language model proposed in \cite{niehuesusing}
 
 
 \subsection{Sentence Level Information} \label{sec:sentence-level}
-To create a ranking of similar documents and their representation to a given sentence we employ vector space models, such as the tf-idf and latent semantic indexing model, as well as topic models, such as the latent dirichlet allocation. After representing the sentences and cleaned encyclopedia articles as bag-of-words with the underlying vocabulary from the training, we can find for each query, which are the sentences, the most similar documents from $D$, which are the articles,  based on the underlying models.
+The idea to use a dedicated topic vector is motivated by a more flexible representation of information and methods that are capable of drawing correlations betweens words independent of their distance.
+For example, the sentence 
+\begin{align}
+\text{``Columns are articles written by journalist''}
+\end{align}
+exhibits several problems in the previous approaches. First, when translated into a low-ressource languages, e.g. Romanian, some of the topic words do not have their own Wikipedia entries, so we cannot take full advantage of the first approach. Second, the contextual word of ``columns'' appears later in the sentence, thus recurrent approaches only considering the earlier context will fail. 
+In this approach, we use the main words in the entire sentence, unlike \cite{mikolov2012context}, to create the topic vector by search through the contents of Wikipedia articles to find topic-related articles, e.g. news related articles. By compressing the information of these articles into a vector which is associated with each word, we can improve the translation of single words by considering global topic information spanning neighboring words. 
+To create a ranking of similar documents and their representation to a given sentence we employ vector space models, such as the tf-idf \cite{salton1986introduction} and latent semantic indexing model \cite{bradford2008empirical}, as well as topic models, such as the latent dirichlet allocation \cite{blei2003latent}. After representing the sentences and cleaned encyclopedia articles as bag-of-words with the underlying vocabulary from the training, we can find for each query, which are the sentences, the most similar documents from $D$, which are the articles,  based on the underlying models.
 
 \subsubsection{TF-IDF}
 Tf-idf \cite{salton1986introduction} reflects how important a word is to a document or a whole collection of documents, it measures the co-occurrence. The advantage of tf-idf is that it grades down terms that appear in multiple documents which makes them less relevant.

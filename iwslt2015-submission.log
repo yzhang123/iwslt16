@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.17 (TeX Live 2016) (preloaded format=pdflatex 2016.7.18)  12 SEP 2016 17:22
+This is pdfTeX, Version 3.14159265-2.6-1.40.17 (TeX Live 2016) (preloaded format=pdflatex 2016.7.18)  12 SEP 2016 17:56
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -1583,15 +1583,11 @@ l.60 ...[rgb]{0,0,0}\makebox(0,0)[lb]{\smash{yi}}}
 (That was another \errmessage.)
 
 ) [4 <./model-extended.pdf>]
-Overfull \hbox (7.1002pt too wide) in paragraph at lines 211--221
+Overfull \hbox (7.1002pt too wide) in paragraph at lines 218--228
  [][] 
  []
 
-[5]
-Underfull \vbox (badness 1824) has occurred while \output is active []
-
-
-(./iwslt2015-submission.bbl [6]
+[5] (./iwslt2015-submission.bbl [6]
 Underfull \hbox (badness 1648) in paragraph at lines 85--89
 \OT1/ptm/m/it/10 con-fer-ence on Com-pu-ta-tional linguistics-Volume 2\OT1/ptm/
 m/n/10 .
@@ -1636,7 +1632,7 @@ e/2016/texmf-dist/fonts/type1/urw/courier/ucrr8a.pfb></usr/local/texlive/2016/t
 exmf-dist/fonts/type1/urw/times/utmb8a.pfb></usr/local/texlive/2016/texmf-dist/
 fonts/type1/urw/times/utmr8a.pfb></usr/local/texlive/2016/texmf-dist/fonts/type
 1/urw/times/utmri8a.pfb>
-Output written on iwslt2015-submission.pdf (7 pages, 202279 bytes).
+Output written on iwslt2015-submission.pdf (7 pages, 203126 bytes).
 PDF statistics:
  162 PDF objects out of 1000 (max. 8388607)
  105 compressed objects within 2 object streams

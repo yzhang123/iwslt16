@@ -172,26 +172,25 @@ Given the computed model, we can predict the topic of a word or query using Baye
 
 
 \subsubsection{Extended language model}
-The simple recurrent neural network language model consists of an input layer, a hidden layer with recurrent connections that maintains a representations of the sentence history, and an output layer which produces the probability distribution over words.
+The basic recurrent neural network language model consists of an input layer, a hidden layer with recurrent connections that maintains a representations of the sentence history, and an output layer which produces the probability distribution over words.
 We propose a variation of the conventional recurrent language model by extending the basic model with an additional sentence based feature layer that is connected to the output layer. Since this real-valued feature vector stays the same for all words in the current sentence, it is replicated 
 for each word before connected with the output layer. This way, the feature information is retained in the model while the same sentence is processed.
 For the $m$ hidden layers we use LSTM-based layers. 
 Given a sentence $\textbf{w} = \{w_1, w_2, \ldots, w_n\}$, we denote the input representation of a word $w_i$ with $x_i$, which is encoded using 1-of-N coding. The side information $\textbf{f}$ computed for the sentence $\textbf{w}$ with the above mentioned models is duplicated $n$ times, yielding the features vectors $f_1, f_2, \ldots, f_n$. We denote the j-th hidden layer associated with the  $x_i$ with $s^j_i$ and the output layer with $y_i$. Then for the $i$-th word $w_i$ the hidden and output layers are computed as follows:
 \begin{equation}
 \begin{aligned}
-s^1_i = f_1(U_1x_i + W_1s^1_{i-1}) \\
-s^j_i = f_j(U_js^{j-1}_i + W_js^j_{i-1}), j \neq 1 \\
-y_i = g(Vs^m_i + Ff_i)
+s^1_i &= f_1(U_1x_i + W_1s^1_{i-1}) \\
+s^j_i &= f_j(U_js^{j-1}_i + W_js^j_{i-1}), \\j &= \{2,\ldots,m\} \\
+y_i &= g(Vs^m_i + Ff_i)
 \end{aligned}
 \end{equation}
 where $f_i$ represents activation functions, and $g$ the softmax function.
-For training of the network, i.e. finding the weight matrices U, V, W, F, we use stochastic gradient descent according to the negative log-likelihood loss function. We also added an additional link from feature input to first hidden layer, which is shown in Figure \ref{fig:model-extended}.
+For training of the network, i.e. finding the weight matrices $U_{1,\dots,m}, V, W_{1,\dots,m}, F$, we use stochastic gradient descent according to the negative log-likelihood loss function. We also added an additional link from feature input to first hidden layer, which is shown in Figure \ref{fig:model-extended}.
 
 \begin{figure} 
 \centering 
-\def\svgwidth{\columnwidth}
-\input{model-extended.pdf_tex}
-\caption{Extended recurrent language model with additional feature input $\textbf{f}$ and two LSTM-based hidden layers. The dashed line from the feature input to the first hidden layer represents a later added connection}
+\includegraphics[width=\columnwidth]{model-extended.pdf}
+\caption{Extended recurrent language model with additional feature input $\textbf{f}$ and two LSTM-based hidden layers. The dashed line from the feature input to the first hidden layer represents an optional connection}
 \label{fig:model-extended}
 \end{figure}
 \section{Experiments}

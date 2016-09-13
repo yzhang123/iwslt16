@@ -68,36 +68,34 @@ However, a dedicated continuous space vector offers more flexibility and possibi
 In fact, often the meaning of a word cannot be just derived from its preceding words but by content words in the entire sentence or surrounding sentences. 
 Topic models play a great role in text mining because they summarize concepts in large amounts of documents into fewer topics by capturing word co-occurence information. Essentially, topic models can be divided into vector space models, e.g. LSA \cite{deerwester1990indexing}, and probability models, e.g. LDA \cite{blei2003latent}. 
 The successful usage of Wikipedia to devise methods for computing semantic relatedness of documents was reported in \cite{gabrilovich2007computing} and \cite{strube2006wikirelate}.
-Graphic models were employed in \cite{han2012entity} to link named entities in text documents by using information extracted from Wikipedia. 
+Generative probabilistic models were employed in \cite{han2012entity} to link named entities in text documents by using information extracted from Wikipedia. 
 In \cite{cucerzan2007large},\cite{bunescu2006using} vector space models are employed to resolve word disambiguations based on entities derived from Wikipedia.
 Similar approaches were applied on other knowledge sources, such as WordNet \cite{hearst1992automatic}.
- 
+However, to our knowledge, it is the first time to combine both encyclopedic knowledge and neural language models.
 
 \section{Integration of Side Information}
 We studied two approaches to integrate encyclopedic information into neural language models.
 First, we extracted for each word a corresponding label from Wikipedia. For this, we exploited the existing hierarchical page structure of Wikipedia and use the category label of a page as a factor input into the previously described factored neural language model.
 Second, for each sentence a ranking of similar encyclopedia documents is calculated using vector space models, such as tfidf or LSA, and topic models, such as LDA. Based on the same underlying models a feature vector of the most similar documents to the current sentence is computed which is fed into a neural language model as additional input. The second approach is not limited to Wikipedia, but can be applied to any encyclopedia. To show the efficiency of this method independent from the underlying knowledge source we have crawled a Chinese lexicon from zdic.net \footnote{http://www.zdic.net/} for which we will present the results later on. 
 
-Neither was
-possible to determine only from their respective phrases in isolation
 
 \subsection{Word Level Information} \label{sec:word-level}
-The motivation behind using general word categories from Wikipedia to associate with words is to strengthen the relatedness of words in sentences that are correct translations but have a low score due to the translation model. 
+The motivation behind using general word categories from Wikipedia in association with words is to strengthen the relatedness of words in sentences that are correct translations but have a low score due to the translation model.
 \begin{align}
-\text{``A journalist writes articles called columns''}
+\text{``A journalist writes articles for columns''}
 \end{align}
 Both of the following hypotheses, as shown in Example \ref{ex:wiki-cat}, are possible translation candidates in decoding:
 \begin{mylist}
 \caption{Two hypothese tagged with Wikipedia categories}
 \begin{enumerate}
-\item $\uch{一}{CD}$ $\uch{位}{M}$$\uch{记者}{新闻 (=news)}$ $\uch{写的}{VV}$ $\uch{文章}{作品}$ $\uch{被}{SB}$ $\uch{称为}{VV}$ $\uch{柱子}{新闻(=news)}$ 
-\item $\uch{一}{CD}$ $\uch{位}{M}$$\uch{记者}{新闻 (=news)}$ $\uch{写的}{VV}$ $\uch{文章}{作品}$ $\uch{被}{SB}$ $\uch{称为}{VV}$ $\uch{专栏}{建筑(=archit.)}$ 	
+\item $\uch{一}{CD}$ $\uch{位}{M}$ $\uch{记者}{新闻 (=news)}$ $\uch{给}{P}$ $\uch{柱子}{建筑(=archit.)}$ $\uch{写}{VV}$ $\uch{文章}{作品}$
+\item $\uch{一}{CD}$ $\uch{位}{M}$ $\uch{记者}{新闻 (=news)}$ $\uch{给}{P}$ $\uch{专栏}{新闻(=news)}$ $\uch{写}{VV}$ $\uch{文章}{作品}$
 \end{enumerate}
 \label{ex:wiki-cat}
 \end{mylist}
 
- Even though the second translation is obviously the correct one, because column in the context of journalist and article refers to a newspaper area, the first translation is more likely according to the translation model since generally a column describes more often a pillar than an article. Since the main contextual reference of column, which is article, is several words apart, translation tasks where the data does not originate from news or similar domains, or in case the data is so constrained in size that it has never seen the words ``column'' and ``journalist'' in the same context, the language model will fail to choose the correct translation.
-Out approach solves this problem by tagging the nouns in the sentence with according Wikipedia categories. By doing so, the bond between column and journalist is reinforced by the their common factor which contributes to a higher score for the correct translation. 
+ Even though the second translation is obviously the correct one, because ``column'' in the context of ``journalist'' and article refers to a newspaper section, the first translation is more likely according to the translation model since, generally, a column describes more often a pillar than a newspaper area. Since the main contextual word of ``column'', which is ``article'', is several words apart, translation tasks where the data does not originate from news or similar domains, or in case the data is so constrained in size that it has never seen the words ``column'' and ``journalist'' in the same context, the language model will fail to choose the correct translation.
+Out approach solves this problem by tagging the nouns in the sentence with according Wikipedia categories. By doing so, the bond between column and journalist is reinforced by the their common factor \ch{新闻 (=news)} which contributes to a higher score for the correct translation. 
 
 
 
@@ -105,7 +103,7 @@ Out approach solves this problem by tagging the nouns in the sentence with accor
 A Wikipedia page, labeled with a title, is either an article or a category page which encompasses one or multiple pages.
 We define the search space as the set of all page titles. Given a word, we search for the page with the same word as title and retrieve its category which is found at the bottom of the page.
 %In case of multiple categories we pick the first one, which is usually the most general one.
-In implementation, we downloaded the freely available Wikipedia dump to create a mapping of pages and their category offline. Using a threshold for the minimum number of elements in a category, we pick recursively the parent of a category in case it does not meet the requirement, thus reducing the total number of associated articles which performed better in practice. In case no category is found at all, we resort to the default part-of-speech tag of a word.
+In implementation, we downloaded the freely available Wikipedia dump to create a mapping of pages and their category offline. Using a threshold for the minimum number of elements in a categories, we pick recursively the parent of a category in case it does not meet the requirement, thus reducing the total number of associated articles which performed better in practice. In case no category is found at all, we resort to the default part-of-speech tag of a word.
 One typical characteristic of Wikipedia is that most of its articles only refer to a small group lexical categories. For example, there are lots more articles about objects (nouns) than about activities (verbs). Fortunately, topic words are usually nouns, so it suffices to tag nouns for an improvement in model quality as suggested in  Example \ref{ex:wiki-cat}.
 
 \subsubsection{Factored language model}
@@ -116,10 +114,10 @@ For training we used the factored language model proposed in \cite{niehuesusing}
 The idea to use a dedicated topic vector is motivated by a more flexible representation of information and methods that are capable of drawing correlations betweens words independent of their distance.
 For example, the sentence 
 \begin{align}
-\text{``Columns are articles written by journalists''}
+\text{``Columns contain articles written by journalists''}
 \end{align}
-exhibits several problems in the previous approaches. First, when translated into a low-ressource languages, e.g. Romanian, some of the topic words do not have their own Wikipedia entries, so we cannot take full advantage of the first approach. Second, the contextual word of ``columns'' appears later in the sentence, thus recurrent approaches only considering the earlier context will fail. 
-In this approach, we use the main words in the entire sentence, unlike \cite{mikolov2012context}, to create the topic vector by search through the contents of Wikipedia articles to find topic-related articles, e.g. news related articles. By compressing the information of these articles into a vector which is associated with each word, we can improve the translation of single words by considering global topic information spanning neighboring words. 
+exhibits several problems. First, when translated into a low-ressource languages, e.g. Romanian, some of the topic words do not have their own Wikipedia entries, so we cannot take full advantage of the first approach. Second, the contextual word of ``columns'', which is ``journalists'', appears later in the sentence, thus recurrent models only considering the earlier context will fail. 
+This motivated to take words in the entire sentence, both left and right of the current word -  unlike \cite{mikolov2012context}, to create a topic vector by searching through Wikipedia contents to find topic-related articles, in the above example news related articles. By compressing the information of these articles into a vector which is associated with each word, we can improve the translation of single words by considering global topic information spanning neighboring words. 
 To create a ranking of similar documents and their representation to a given sentence we employ vector space models, such as the tf-idf \cite{salton1986introduction} and latent semantic indexing model \cite{bradford2008empirical}, as well as topic models, such as the latent dirichlet allocation \cite{blei2003latent}. After representing the sentences and cleaned encyclopedia articles as bag-of-words with the underlying vocabulary from the training, we can find for each query, which are the sentences, the most similar documents from $D$, which are the articles,  based on the underlying models.
 
 \subsubsection{TF-IDF}

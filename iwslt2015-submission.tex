@@ -17,7 +17,7 @@
 
 %% \newcommand{\reg}{\textsuperscript{\textcircled{\textsc r}}}
 
-\title{Integrating Encyclopedic Knowledge into Neural Network Language Models}
+\title{Integrating Encyclopedic Knowledge into Neural Language Models}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% Please make sure to keep technical paper submissions anonymous  !
@@ -77,7 +77,7 @@ However, to our knowledge, it is the first time to combine both encyclopedic kno
 \section{Integration of Side Information}
 We studied two approaches to integrate encyclopedic information into neural language models.
 First, we extracted for each word a corresponding label from Wikipedia. For this, we exploited the existing hierarchical page structure of Wikipedia and use the category label of a page as a factor input into the previously described factored neural language model.
-Second, for each sentence a ranking of similar encyclopedia documents is calculated using vector space models, such as tfidf or LSA, and topic models, such as LDA. Based on the same underlying models a feature vector of the most similar documents to the current sentence is computed which is fed into a neural language model as additional input. The second approach is not limited to Wikipedia, but can be applied to any encyclopedia. To show the efficiency of this method independent from the underlying knowledge source we have crawled a Chinese lexicon from zdic.net \footnote{http://www.zdic.net/} for which we will present the results later on. 
+Second, for each sentence a ranking of similar encyclopedia documents is calculated using vector space models, such as tfidf or LSA, and topic models, such as LDA. Based on the same underlying models a feature vector of the most similar documents to the current sentence is computed which is fed into a neural language model as additional input. The second approach is not limited to Wikipedia, but can be applied to any encyclopedia. To show the efficiency of this method independent from the underlying knowledge source we have crawled a Chinese lexicon from zdic.net \cite{zdic} for which we will present the results later on. 
 
 
 \subsection{Word Level Information} \label{sec:word-level}
@@ -120,11 +120,11 @@ For example, the sentence
 \end{align}
 exhibits several problems. First, when translated into a low-ressource languages, e.g. Romanian, some of the topic words do not have their own Wikipedia entries, so we cannot take full advantage of the first approach. Second, the contextual word of ``columns'', which is ``journalists'', appears later in the sentence, thus recurrent models only considering the earlier context will fail. 
 This motivated to take words in the entire sentence, both left and right of the current word -  unlike \cite{mikolov2012context}, to create a topic vector by searching through Wikipedia contents to find topic-related articles, in the above example news related articles. By compressing the information of these articles into a vector which is associated with each word, we can improve the translation of single words by considering global topic information spanning neighboring words. 
-To create a ranking of similar documents and their representation to a given sentence we employ vector space models, such as the tf-idf \cite{salton1986introduction} and latent semantic indexing model \cite{bradford2008empirical}, as well as probabilistic models, such as latent dirichlet allocation \cite{blei2003latent}. After representing the sentences and cleaned encyclopedia articles as bag-of-words, we query for each sentence the most similar documents from the total set of encyclopedia articles. These documents provide general information, such as higher-level concepts, about the current sentence. Based on the chosen model the best documents are transformed into vector representations and the averaged sum of the vectors is used as the additional feature input for the extended neural language model. This process is illustrated by Figure \ref{fig:flow}.
+To create a ranking of similar documents and their representation to a given sentence we employ vector space models, such as the tf-idf \cite{salton1986introduction} and latent semantic indexing model \cite{bradford2008empirical}, as well as probabilistic models, such as latent dirichlet allocation \cite{blei2003latent}. After representing the sentences and cleaned encyclopedia articles as bag-of-words, we query for each sentence the most similar documents from the total set of encyclopedia articles. These documents might provide general information, such as higher-level concepts, about the current sentence. Based on the chosen model, e.g. LSA, the best documents are transformed into vector representations and the averaged sum of the vectors is used as the additional feature input for the extended neural language model. This process is illustrated in Figure \ref{fig:flow}.
 \begin{figure} 
 \centering 
 \includegraphics[width=\columnwidth]{flow.pdf}
-\caption{Flow}
+\caption{Feature Input Creating Process for the Extended Language Model. Sentence and encyclopdia articles are transformed into vector representations based on the underlying model. Those articles most similar to the sentence are chosen; then their averaged sum constitutes the feature input.}
 \label{fig:flow}
 \end{figure}
 
@@ -140,7 +140,7 @@ Shortcomings of this model include the inability to reduce the description lengt
 Latent semantic analysis (LSA) \cite{deerwester1990indexing} is a method that discovers hidden concepts in documents by using single value decomposition (SVD) on the set of documents $D$.
 LSA uses a term-document matrix $A$ with rows corresponding to terms and columns corresponding to documents. The entry $A_{i,j}$ equates to $tfidf(t_i, d_j, D)$. SVD decomposes $A$ into $U$, $\Sigma$, and $V$, so that $A = U \Sigma V^*$.
 LSA uses the decomposition to find a low-rank approximation, that is, a matrix $A_k = U_k \Sigma_k V_k^*$ of a predefined lower rank $k$ closest in similarity to the original matrix $A$. This is done by deleting all but the $k$ biggest single values in $\Sigma$.
-LSA minimizes the Frobenius distance $\|A-A_k\|_F$. Applied to the this work, $k$ is the number of hidden concepts we want to learn. The vector representations of the documents based on the LSA model can be found in the columns of $\Sigma_k V_k^*$.
+LSA minimizes the Frobenius distance $\|A-A_k\|_F$. Applied to this work, $k$ is the number of hidden concepts we want to learn. The vector representations of the documents based on the LSA model can be found in the columns of $\Sigma_k V_k^*$.
 The number of dimensions $k$ is an empirical question. Essentially, $k$ is much smaller than the original space dimension, which is usually the number of total documents. Previous papers show that for Wikipedia dumps a good value for $k$ should be chosen between 200 to 500 \cite{bradford2008empirical}. In this work $k$ is 300.
 
 
@@ -154,8 +154,9 @@ The basic recurrent neural network language model consists of an input layer, a 
 We propose a variation of the conventional recurrent language model by extending the basic model with an additional sentence based feature layer that is connected to the output layer. Since this real-valued feature vector stays the same for all words in the current sentence, it is replicated 
 for each word before connected with the output layer. This way, the feature information is retained in the model while the same sentence is processed.
 For the $m$ hidden layers we use LSTM-based layers. 
-Given a sentence $\textbf{w} = \{w_1, w_2, \ldots, w_n\}$, the side information $\textbf{f}$ is computed for the sentence $\textbf{w}$ with the above mentioned models and duplicated for each of the sentence words. For the $i$-th word we denote the word representation with $x_i$, which is encoded using 1-of-N coding, the feature input with $\text{f}_i$, the hidden layers with $s^1, s^2, \dots, s^m$ and the output layer with $y_i$. Then the hidden and output layers are computed as follows:
+Given a sentence $\textbf{w} = \{w_1, w_2, \ldots, w_n\}$, the side information $\textbf{f}$ is computed for the sentence $\textbf{w}$ with the above mentioned models and duplicated for each of the sentence words. For the $i$-th word we denote the word representation with $x_i$, which is encoded using 1-of-N coding, the feature input with $\text{f}_i$, the hidden layers with $s^1, s^2, \dots, s^m$ and the output layer with $y_i$. With only one connection of the feature input to the output layer, the hidden and output layers are computed according to \eqref{eq}.
 \begin{equation}
+\label{eq}
 \begin{aligned}
 s^1_i &= f_1(U_1x_i + W_1s^1_{i-1}) \\
 s^j_i &= f_j(U_js^{j-1}_i + W_js^j_{i-1}), \\j &= \{2,\ldots,m\} \\
@@ -183,20 +184,21 @@ The English-Chinese baseline system uses two word-based language models, and 12 
 The English-Romanian baseline system uses two word-based language models, 2 cluster-based models using 50, 1000 or 1000 clusters, and a POS-based language model. In total 22-23 features are used to generate an $n$-best list of size 300. A full system description can be found in \cite{niehuesusing}.
 For decoding, both language pairs are optimized using minimum error rate training. The same is used for rescoring of English-Chinese, whereas English-Romanian used ListNet to rerank the $n$-best list.
 All RNN-based language models for both language pairs are trained on the target side of the parallel training data. The English-Chinese system uses a vocabulary of 10K, while the English-Romanian system uses a vocabulary of 5K words. For word level side information word categories are extracted from Wikipedia as described in \ref{sec:word-level} as input into the factored language model.
-For sentence level side information, as described in \ref{sec:sentence-level}, an additional web-crawled Chinese lexicon from zdic.net \footnote{\label{foot:zdic} http://www.zdic.net/} is used in the English-Chinese system to show the model's performance independently from a specific encyclopedia.
+For sentence level side information, as described in \ref{sec:sentence-level}, an additional web-crawled Chinese lexicon from zdic.net \cite{zdic} is used in the English-Chinese system to show the model's performance independently from a specific encyclopedia.
 
 
 \subsection{English-Chinese}
-In the first experiment of English-Chinese we used the scores of the factored language model in addition to the baseline features, which is shown in Table \ref{tb:zh-factored}. BLEU score improvements over the basic recurrent language model are displayed in brackets. When using both words and Wikipedia categories the model performs 0.66 BLEU score points better in testing than the basic recurrent model using only words as input. Combining this model with the scores of a factored model with words and POS as factors produces a further increase of 0.14 points, resulting in an overall improvement of 0.84 BLEU points over the basic recurrent model.
+The English-Chinese system before recoring gives a BLEU score 17.05 in testing. For all of the following experiment, our baseline is a system rescored with a conventional RNNLM.
+In the first experiment of English-Chinese we used the scores of the factored language model in addition to the baseline features, which is shown in Table \ref{tb:zh-factored}. BLEU score improvements over the baseline system are displayed in brackets. When using both words and Wikipedia categories as factors the model performs 0.66 BLEU score points better in testing than using only words as input. The system that uses words, Wiki cateogories and POS as factors performs better by 0.84 better than the factored model with only words and POS as factors.
 
 \begin{table}
-\caption{English-Chinese Factored Language Models}
+\caption{English-Chinese (ZH) Factored Language Models}
 \centering
   \begin{tabular}{ lll }
   	\hline
   	Model                  & devdata       & testdata      \\ \hline\hline
-  	Baseline               & 14.69         & 17.05         \\
-  	+RNNLM                 & 14.7          & 17.02         \\
+  	%Baseline              & 14.69         & 17.05         \\
+  	Baseline               & 14.7          & 17.02         \\
   	+Factored LM POS       & 14.77         & 16.97         \\ \hline
   	+Factored LM Cat       & 14.89 (+0.12) & 17.63 (+0.66) \\
   	+Factored LM Cat + POS & 14.75 (-0.02) & 17.81 (+0.84) \\ \hline
@@ -204,10 +206,10 @@ In the first experiment of English-Chinese we used the scores of the factored la
   \label{tb:zh-factored}
 \end{table}
 
-In a second experiment, extended language models using different methods to compute the feature input vector are studied. Tfidf, LSA and LDA are used for similar document ranking as well as vector representation. It is worth mentioning that the method for ranking can be paired with a different choice for representation. The performance results of various combinations of pairings are presented in Table \ref{tb:zh-extended-diff-features}. Although all combinations result in better rescoring performance compared to the basic recurrent model, choosing the same method for both tasks mostly achieve a noticeable higher boost. For example, tfidf creates an increase of 0.63 points on the basic recurrent model, LSA an increase of 0.78. The only exception to this rule is LDA. One reason for this could be suboptimal parameter picks for this generally more complex generative model. Despite the slightly better performance of LSA, tfidf is employed in the following experiments due to its simplicity and, thus, faster training and evaluation.
+In a second experiment, extended language models using different methods to compute the feature input vector are studied. Tfidf, LSA and LDA are used for similar document ranking as well as vector representation. It is worth mentioning that the method for ranking can be paired with a different choice for representation. The performance results of various combinations of pairings are presented in Table \ref{tb:zh-extended-diff-features}. Although all combinations result in better rescoring performance compared to the baseline, choosing the same method for both tasks mostly achieve a noticeable higher boost. For example, tfidf creates an increase of 0.63 points on the baseline systme, LSA an increase of 0.78. The only exception to this rule is LDA. One reason for this could be suboptimal parameter picks for this generally more complex generative model. Despite the slightly better performance of LSA, tfidf is employed in the following experiments due to its simplicity and, thus, faster training and evaluation.
 
 \begin{table}
-\caption{Extended Language Models: Overview of different feature vectors}
+\caption{ZH Extended Language Models: Overview of different feature vectors}
 \centering
   \begin{tabular}{llll}
   	\hline
@@ -222,31 +224,30 @@ In a second experiment, extended language models using different methods to comp
   \label{tb:zh-extended-diff-features}
 \end{table}
 
-In order to test the efficiency of this model independently from the characteristics of the  underlying encyclopedia  source, a Chinese lexicon is crawled from zdic.net \footnotemark[\ref{foot:zdic}]. It contrasts Wikipedia in the variety and length of definitions. The lexicon provides more but shorter compact explanations for all type of words, particularly verbs. Despite the difference in content, the use of the lexicon shows an increase of 0.56 BLEU points, similar to that of Wikipedia as shown in Table \ref{tb:zh-extended-diff-sources}.
+In order to test the efficiency of this model independently from the characteristics of the  underlying encyclopedia  source, a Chinese lexicon is crawled from zdic.net \cite{zdic}. It contrasts Wikipedia in the variety and length of definitions. The lexicon provides more but shorter compact explanations for all type of words, particularly verbs. Despite the difference in content, the use of the lexicon shows an increase of 0.56 BLEU points, similar to that of Wikipedia as shown in Table \ref{tb:zh-extended-diff-sources}.
 
 \begin{table}
-\caption{Extended Language Models: Comparison between different encyclopedia sources}
+\caption{ZH Extended Language Models: Comparison between different encyclopedia sources}
 \centering
   \begin{tabular}{lll}
   	\hline
   	Model    & devdata       & testdata      \\ \hline\hline
-  	Baseline & 14.69         & 17.05         \\
-  	+RNNLM   & 14.7          & 17.02         \\ \hline
+  	Baseline & 14.7          & 17.02         \\ \hline
   	+Wiki    & 14.78 (+0.08) & 17.68 (+0.66) \\
   	+Dict    & 14.91 (+0.21) & 17.58 (+0.56) \\ \hline
   \end{tabular}
   \label{tb:zh-extended-diff-sources}
 \end{table}
 
-An overview of all the models and their perplexities is given in Table \ref{tb:PPL}. All models exhibit an evident reduction in perplexity compared to the basic recurrent model, which goes along with the previous rescoring results.
+An overview of all the models and their perplexities is given in Table \ref{tb:PPL}. All models exhibit an evident reduction in perplexity compared to the baseline system, which goes along with the previous rescoring results.
 
 \begin{table} 
-  \caption{Model Perplexities}
+  \caption{ZH Model Perplexities}
   \centering
   \begin{tabular}{ ll}
   	\hline
   	Model               & PPL    \\ \hline\hline
-  	RNNLM               & 128.17 \\ \hline
+  	Baseline            & 128.17 \\ \hline
   	Factored LM POS     & 110.86 \\
   	Factored LM Cat     & 109.73 \\
   	Factored LM Cat+POS & 110.38 \\ \hline
@@ -257,18 +258,18 @@ An overview of all the models and their perplexities is given in Table \ref{tb:P
 \end{table}
 
 
-As indicated by Figure \ref{fig:model-extended}, an additional connection was established between the feature layer and the first hidden layer in another experiment. Using tfidf the model gained a small increase of +0.16 BLEU on the model with single connection and a total of +0.79 BLEU on the simple recurrent model, as shown in Table \ref{tb:zh-extended-both}.
+As indicated by Figure \ref{fig:model-extended}, an additional connection was established between the feature layer and the first hidden layer in another experiment. Using tfidf the model gained a small increase of +0.16 BLEU on the model with single connection and a total of +0.79 BLEU on the baseline, as shown in Table \ref{tb:zh-extended-both}.
 
 
 \begin{table}
-\caption{Extended Language Models: Connecting feature input with two layers}
+\caption{ZH Extended Language Models: Connecting feature input with two layers}
 \centering
   \begin{tabular}{lll}
   	\hline
-  	Model               & devdata       & testdata      \\ \hline\hline
-  	Baseline+RNNLM      & 14.70         & 17.02         \\ \hline
-  	Baseline+TFIDF      & 14.78 (+0.08) & 17.68 (+0.63) \\
-  	Baseline+2Con TFIDF & 14.74 (+0.04) & 17.81 (+0.79)
+  	Model       & devdata       & testdata      \\ \hline\hline
+  	Baseline    & 14.70         & 17.02         \\ \hline
+  	+TFIDF      & 14.78 (+0.08) & 17.68 (+0.63) \\
+  	+2Con TFIDF & 14.74 (+0.04) & 17.81 (+0.79)
   \end{tabular}
   \label{tb:zh-extended-both}
 \end{table}
@@ -279,7 +280,7 @@ In the previous work \anony{\cite{niehuesusing}} , the factored language model f
 
 
 \begin{table}
-\caption{Factored Language Models: Single Scores}
+\caption{RO Factored Language Models: Single Scores}
 \centering
   \begin{tabular}{lll}
   	\hline
@@ -296,7 +297,7 @@ Table \ref{tb:ro-factored-combi} shows the results of model features used in add
 Adding word tags for all word types achieved an improvement of about 0.1 BLEU points in two configurations over the reference model.
 
 \begin{table}
-\caption{Factored Language Models: End Scores}
+\caption{RO Factored Language Models: End Scores}
 \centering
   \begin{tabular}{llll}
   	\hline

@@ -189,7 +189,7 @@ For sentence level side information, as described in \ref{sec:sentence-level}, a
 
 \subsection{English-Chinese}
 The English-Chinese system before recoring gives a BLEU score 17.05 in testing. For all of the following experiment, our baseline is a system rescored with a conventional RNNLM.
-In the first experiment of English-Chinese we used the scores of the factored language model in addition to the baseline features, which is shown in Table \ref{tb:zh-factored}. BLEU score improvements over the baseline system are displayed in brackets. When using both words and Wikipedia categories as factors the model performs 0.66 BLEU score points better in testing than using only words as input. The system that uses words, Wiki cateogories and POS as factors performs better by 0.84 better than the factored model with only words and POS as factors.
+In the first experiment of English-Chinese we used the scores of the factored language model in addition to the baseline features, which is shown in Table \ref{tb:zh-factored}. BLEU score improvements over the baseline system are displayed in brackets. We tagged only nouns in the data sets, leading 11.21 \% coverage for the development set and 10.61 \% on the test set. The model that uses words and Wikipedia categories as factors performs 0.66 BLEU score points better in testing than using only words as input. The system that uses words, Wiki cateogories and POS as factors performs better by 0.84 better than the factored model with only words and POS as factors.
 
 \begin{table}
 \caption{English-Chinese (ZH) Factored Language Models}

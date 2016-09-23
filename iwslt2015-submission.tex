@@ -278,6 +278,20 @@ As indicated by Figure \ref{fig:model-extended}, an additional connection was es
 \subsection{English-Romanian}
 In the previous work \anony{\cite{niehuesusing}} , the factored language model for English-Romanian integrated four factors: the word's surface form, POS, and word clusters with 100 and 1000 class respectively. Our experiment builds on top of \cite{niehuesusing}, which used for all systems a vocabulary of 5K, and the same denotations are used to illustrate the following results. In the first experiment, only the factored language models are evaluated without the baseline system. The system from the previous work with all four factors as input and prediction reached a BLEU score of 28.54, as shown in Table \ref{tb:ro-factored-single}. This model will serve as reference for our models. After adding our extracted Wikipedia word categories to the factors, we achieved improvement of 0.17 and 0.30 BLEU points respectively.
 
+\begin{table}
+\caption{RO Factored Language Models: Word Coverage by Wiki category}
+\centering
+  \begin{tabular}{lll}
+  	\hline
+  	Data     & Nouns            & All              \\ \hline\hline
+  	Devdata  & $88874/4579609$  & $414732/4579609$ \\
+  	Testdata & $95421/3634940$  & $369583/3634940$ \\ \hline
+  	Setimes  & $182436/5237114$ & $583270/5237114$
+  \end{tabular}
+  \label{tb:ro-word-coverage}
+\end{table}
+
+
 
 \begin{table}
 \caption{RO Factored Language Models: Single Scores}

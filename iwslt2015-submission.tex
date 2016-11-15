@@ -9,7 +9,7 @@
 \DeclareFloatingEnvironment[placement={!ht},name=Example]{mylist}
 \newcommand{\ch}[1]{\begin{CJK}{UTF8}{gbsn}{#1}\end{CJK}}
 \newcommand{\uch}[2]{\underbrace{\text{\ch{#1}}}_{\text{\ch{#2}}}}
-\newcommand{\anony}[1]{\textit{[anonymized]}}
+%\newcommand{\anony}[1]{\textit{[anonymized]}}
 \setcounter{page}{1}
 \sloppy		% better line breaks
 %\ninept
@@ -48,7 +48,7 @@
 \maketitle
 %
 \begin{abstract}
-Neural models have recently shown big improvements in the performance of phrase-based machine translation. Recurrent language models, in particular, have been a great success due to their ability to model arbitrary long context. In this work, we integrate global semantic information extracted from large encyclopedic sources into neural network language models. We integrate semantic word classes extracted from Wikipedia and sentence level topic information into an RNN-based language model.
+Neural models have recently shown big improvements in the performance of phrase-based machine translation. Recurrent language models, in particular, have been a great success due to their ability to model arbitrary long context. In this work, we integrate global semantic information extracted from large encyclopedic sources into neural network language models. We integrate semantic word classes extracted from Wikipedia and sentence level topic information into an recurrent neural network-based language model.
 The new resulting models exhibit great potential in alleviating data sparsity problems with the additional knowledge provided. This approach of integrating global information is not restricted to language modeling but can also be easily applied to any model that profits from context or further data resources, e.g. neural machine translation. Using this model has improved rescoring quality of a state-of-the-art phrase-based translation system by 0.84 BLEU points. We performed experiments on two language pairs.
 
 
@@ -58,33 +58,33 @@ The new resulting models exhibit great potential in alleviating data sparsity pr
 
 %
 \section{Introduction}
-Recurrent neural network language models have recently shown great improvements in statistical machine translation, both during decoding and rescoring. The use of continuous word representations has achieved better generalization of the data which effectively lowered data sparsity problems. Furthermore, the recurrent connections are able to model long-range dependencies. Yet, most of these models strictly depend on monolingual and parallel data, which is sometimes not available in large amounts or only for specific domains, especially with low-resource languages.
-This has motivated neural network language models that take multiple parallel streams of data as input instead of just the single stream of surface words. These so-called factors can be used to add additional information, e.g. POS or automatic word clusters, which helps mainly with morphologically rich languages (e.g. Romanian, German). However, so far the additional factors were only limited to syntactic or local context information around the current word. Especially for languages without sufficient training data it is important to take advantage of other knowledge sources, e.g. encyclopedia knowledge. For example, Wikipedia has become a growing source for learning general concepts since the emergence of the Internet has led to an explosion of textual data. 
-In this paper, we studied the integration of large encyclopedic knowledge into recurrent neural network-based language models by using two approaches. 
+Recurrent neural network language models (RNNLMs) have recently shown great improvements in statistical machine translation (SMT), both during decoding and rescoring. The use of continuous word representations has achieved better generalization of the data which effectively lowered data sparsity problems. Furthermore, the recurrent connections are able to model long-range dependencies. Yet, most of these models strictly depend on monolingual and parallel data, which is sometimes not available in large amounts or only for specific domains, especially with low-resource languages.
+This has motivated RNNLMs to take multiple parallel streams of data as input instead of just the single stream of surface words. These so-called factors can be used to add additional information, e.g. part-of-speech (POS) or automatic word clusters, which helps mainly with morphologically rich languages (e.g. Romanian, German). However, so far the additional factors were only limited to syntactic or local context information around the current word. Especially for languages without sufficient training data it is important to take advantage of other knowledge sources, e.g. encyclopedia knowledge. For example, Wikipedia has become a growing source for learning general concepts since the emergence of the Internet has led to an explosion of textual data. 
+In this paper, we studied the integration of large encyclopedic knowledge into RNNLMs by using two approaches. 
 In the first approach we use a factored model to integrate Wikipedia categories as factors. 
 
-In order to understand large unstructured data sets great achievements have been made in latent concept learning in the area of text mining. Techniques that categorize documents include latent semantic analysis and probabilistic topic modeling. In this work, we use tf-idf, LSA and LDA to compute a real-valued topic vector for each sentence that is fed as an additional input into the network. 
+In order to understand large unstructured data sets great achievements have been made in latent concept learning in the area of text mining. Techniques that categorize documents include latent semantic analysis and probabilistic topic modeling. In this work, we use term frequency–inverse document frequency (tf-idf), latent semantic analysis (LSA) and latent Dirichlet allocation (LDA) to compute a real-valued topic vector for each sentence that is fed as an additional input into the network. 
 
 These approaches utilize general word categories and global topic features in combination with local contexts implicitly provided by recurrent neural models to improve lexical selection. 
 
 
 \section{Related work}
-Language models are a critical component of many application systems, e.g. ASR, MT and OCR. However, language models have always faced the problem of data sparsity. Factored language models \cite{bilmes2003factored} introduced the use of a bundle of factors associated with a word which outperformed previous $n$-gram models without expanding the training data. In the work of \cite{bilmes2003factored} morphs, stems, POS and clustered word class were used as factors. In \cite{koehn2007factored}, the single feature stream of surface words was replaced with multiple factors and integrated into a phrase-based statistical machine translation system by breaking down the translation model into several steps that pertain to the translation of single factors, which influence the prediction of the next word.
+Language models are a critical component of many application systems, e.g. automatic speech recognistion, machine translation and optical character recognition. However, language models have always faced the problem of data sparsity. Factored language models \cite{bilmes2003factored} introduced the use of a bundle of factors associated with a word which outperformed previous $n$-gram models without expanding the training data. In the work of \cite{bilmes2003factored} morphs, stems, POS and clustered word class were used as factors. In \cite{koehn2007factored}, the single feature stream of surface words was replaced with multiple factors and integrated into a phrase-based SMT system by breaking down the translation model into several steps that pertain to the translation of single factors, which influence the prediction of the next word.
 After recurrent neural network models became a success in language modeling \cite{mikolov2010recurrent}, a factored input layer was employed in a model by \cite{wu2012factored} which uses a structured output layer based on word classes to handle vocabularies of large size.
-Motivated by multi-task learning in NLP, \cite{niehuesusing} proposed a multi-factor recurrent neural network language model which jointly predicts different output factors by mapping the output of the LSTM-layer \cite{hochreiter1997long} to as many softmax layers as there are output factors, thereby creating multiple distributions at the output layer. In the rescoring of $n$-best lists, this model can be included as either one or several additional features depending on whether the output is treated as a joint probability or individual probabilities.
+Motivated by multi-task learning in natural language processing, \cite{niehuesusing} proposed a multi-factor recurrent neural network language model (FRNNLM) which jointly predicts different output factors by mapping the output of the LSTM-layer \cite{hochreiter1997long} to as many softmax layers as there are output factors, thereby creating multiple distributions at the output layer. In the rescoring of $n$-best lists, this model can be included as either one or several additional features depending on whether the output is treated as a joint probability or individual probabilities.
 However, a dedicated continuous space vector offers more flexibility and possibility to store additional side information, especially for complex, higher-level concepts, e.g. topic distributions. In \cite{mikolov2012context}, a approach to use an additional input vector in a neural language model was proposed. In their work, a vector instead of a single factor is associated with each word. However, this vector depends only on a word's earlier local context, thus neglecting the influence of the future context on a word's meaning. 
 In fact, often the meaning of a word cannot be just derived from its preceding words but depends on the content words of the entire sentence or surrounding sentences. 
-Topic models play a great role in text mining because they summarize large amounts of documents into fewer concepts by capturing word co-occurrence information. Essentially, topic models can be divided into vector space models, e.g. LSA \cite{deerwester1990indexing}, and probability models, e.g. LDA \cite{blei2003latent}. 
+Topic models play a great role in text mining because they summarize large amounts of documents into fewer concepts by capturing word co-occurrence information. Essentially, topic models can be divided into vector space models (VSMs), e.g. LSA \cite{deerwester1990indexing}, and probability models, e.g. LDA \cite{blei2003latent}. 
 The successful usage of Wikipedia to devise methods for computing semantic relatedness of documents was reported in \cite{gabrilovich2007computing} and \cite{strube2006wikirelate}.
 Generative probabilistic models were employed in \cite{han2012entity} to link named entities in text documents by using information extracted from Wikipedia. 
-In \cite{cucerzan2007large} and \cite{bunescu2006using} vector space models were employed to resolve word disambiguations based on entities derived from Wikipedia.
+In \cite{cucerzan2007large} and \cite{bunescu2006using} VSMs were employed to resolve word disambiguations based on entities derived from Wikipedia.
 Similar methods were applied to other knowledge sources, such as WordNet \cite{hearst1992automatic}.
 However, to our knowledge, it is the first time encyclopedic knowledge is used for neural language modeling.
 
 \section{Integration of encyclopedic information}
 We propose two approaches to integrate encyclopedic information into neural language models.
-First, words are labeled with Wikipedia categories. The hierarchical page structure of Wikipedia enables us to obtain a page's category which we use as a factor for a factored neural language model.
-Second, for every sentence in the data a ranking of related encyclopedia articles is established by using a vector space model or topic model. Based on the underlying model a feature vector, which comprises the information of the most similar documents to the current sentence, is computed  and fed into a neural language model as additional input. The second approach is not limited to Wikipedia, but can be applied to any encyclopedia. To test the performance of this method independently of the underlying knowledge source we have crawled a Chinese lexicon from zdic.net \cite{zdic} for which the results are presented later on. 
+First, words are labeled with Wikipedia categories. The hierarchical page structure of Wikipedia enables us to obtain a page's category which we use as factored input into the previously described FRNNLM.
+Second, for every sentence in the data a ranking of related encyclopedia articles is established by using a VSM or topic model. Based on the underlying model a feature vector, which comprises the information of the most similar documents to the current sentence, is computed  and fed into a neural language model as additional input. The second approach is not limited to Wikipedia, but can be applied to any encyclopedia. To test the performance of this method independently of the underlying knowledge source we have crawled a Chinese lexicon from zdic.net \cite{zdic} for which the results are presented later on. 
 
 
 \subsection{Word-level information} \label{sec:word-level}
@@ -121,7 +121,7 @@ In the implementation, the offline Wikipedia dump is used to create a mapping be
 One characteristic of Wikipedia is that most of its articles only refer to a small group of lexical categories. For example, there are a lot more articles about objects (nouns) than activities (verbs). Since topic words are usually nouns, it suffices to label only nouns in a sentence to improve model quality, which is shown in Example \ref{ex:wiki-cat}.
 
 \subsubsection{Factored neural language model}
-For training the factored language model proposed in \cite{niehuesusing} is used, which takes one or multiple factors at the input layer and offers the option of a factorized output layer. After concatenating the embeddings of the input factors into a single word embedding, this vector is sent through one or multiple LSTM-based layers \cite{hochreiter1997long} before projected onto the factored output probabilities. The instance of the model used for this work takes two factors, the surface form and the Wikipedia word category. These are mapped onto an embedding vector of size 100, which is the same size as the first LSTM-layer. For the second LSTM-layer 200 nodes are chosen. Only one factor is used at the output, which is the word's surface form.
+For training the FRNNLM proposed in \cite{niehuesusing} is used, which takes one or multiple factors at the input layer and offers the option of a factorized output layer. After concatenating the embeddings of the input factors into a single word embedding, this vector is sent through one or multiple LSTM-based layers \cite{hochreiter1997long} before projected onto the factored output probabilities. The instance of the model used for this work takes two factors, the surface form and the Wikipedia word category. These are mapped onto an embedding vector of size 100, which is the same size as the first LSTM-layer. For the second LSTM-layer 200 nodes are chosen. Only one factor is used at the output, which is the word's surface form.
 
 
 \subsection{Sentence-level information} \label{sec:sentence-level}
@@ -132,11 +132,11 @@ For example, the sentence
 \end{align}
 exhibits several problems. First, when a corpus is translated into a low-resource language, e.g. Romanian, some of the content words do not have their own Wikipedia entries. This means we cannot take full advantage of the first approach. Second, the main context word of ``columns'', which is ``journalists'', appears later in the sentence; therefore a recurrent language model that only considers the previous context would fail. 
 This motivated the idea to consider words in the entire sentence, unlike \cite{mikolov2012context}, and create a topic vector for each sentence by searching through Wikipedia to find topic related articles. In the above example sentence, these would probably be news related articles. By compressing the information of these articles into a vector which is associated with each word, global topic information spanning neighboring words can be considered when translating a word. 
-To create a ranking of similar documents and their representation to a given sentence, vector space models can be employed, such as tf-idf \cite{salton1986introduction} and latent semantic analysis \cite{bradford2008empirical}, but also probabilistic models, such as latent Dirichlet allocation \cite{blei2003latent}. After representing the sentences and cleaned encyclopedia articles as bag-of-words, we query for each sentence the most similar documents from the total set of encyclopedia articles. These documents provide general information, such as higher-level concepts, about the current sentence. Based on the chosen model, e.g. LSA, the best documents are transformed into vector representations and the averaged sum of the vectors is used as the additional feature input for a recurrent neural network-based language model, which we will refer to as an extended neural language model. This process is illustrated in Figure \ref{fig:flow}.
+To create a ranking of similar documents and their representation to a given sentence, VSMs can be employed, such as tf-idf \cite{salton1986introduction} and LSA \cite{bradford2008empirical}, but also probabilistic models, such as LDA \cite{blei2003latent}. After representing the sentences and cleaned encyclopedia articles as bag-of-words, we query for each sentence the most similar documents from the total set of encyclopedia articles. These documents provide general information, such as higher-level concepts, about the current sentence. Based on the chosen model, e.g. LSA, the best documents are transformed into vector representations and the averaged sum of the vectors is used as the additional feature input for a recurrent neural network-based language model, which we will refer to as an extended recurrent neural language model (ERNNLM). This process is illustrated in Figure \ref{fig:flow}.
 \begin{figure} 
 \centering 
 \includegraphics[width=\columnwidth]{flow.pdf}
-\caption{\it Feature input creation process for the extended language model. Sentence and encyclopedia articles are transformed into vector representations based on the underlying method. The articles most similar to the sentence are chosen; then their averaged sum constitutes the feature input.}
+\caption{\it Feature input creation process for the ERNNLM. Sentence and encyclopedia articles are transformed into vector representations based on the underlying method. The articles most similar to the sentence are chosen; then their averaged sum constitutes the feature input.}
 \label{fig:flow}
 \end{figure}
 
@@ -144,12 +144,12 @@ To create a ranking of similar documents and their representation to a given sen
 Tf-idf \cite{salton1986introduction} is a co-occurrence measure and determines the importance of a word to one or multiple documents. Having the capability of grading down terms that appear in multiple documents, tf-idf is computed by multiplying a local component (term frequency or $tf$) with a global component (inverse document frequency or $idf$).
 The cosine distance can be used to determine a ranking of similar documents for a given sentence query.
 For a predefined number of top documents $n$ we determine the average tf-idf value of the best $n$ documents for a query.
-This vector constitutes the sentence level semantic information which is fed into an extended recurrent neural language model together with the surface form of a sentence.
+This vector constitutes the sentence level semantic information which is fed into an ERNNLM together with the surface form of a sentence.
 Shortcomings of this model include the inability to reduce the description length of the document, since words are only replaced with values. Also, it does not tell much about the statistical structure within and between documents.
 
 
 \subsubsection{Latent semantic analysis}
-Latent semantic analysis (LSA) \cite{deerwester1990indexing} is a method that discovers hidden concepts in documents by using single value decomposition (SVD) on the set of documents $D$.
+LSA \cite{deerwester1990indexing} is a method that discovers hidden concepts in documents by using single value decomposition (SVD) on the set of documents $D$.
 LSA uses a term-document matrix $A$ with rows corresponding to terms and columns corresponding to documents. The entry $A_{i,j}$ equates to the tf-idf value of the term $i$ for the document $j$. SVD decomposes $A$ into $U$, $\Sigma$, and $V$, such that $A = U \Sigma V^*$.
 LSA uses the decomposition to find a low-rank approximation, that is, a matrix $A_k = U_k \Sigma_k V_k^*$ of a predefined lower rank $k$ closest in similarity to the original matrix $A$. This is done by deleting all but the $k$ biggest single values in $\Sigma$.
 Therefore, LSA minimizes the Frobenius distance $\|A-A_k\|_F$. In this work, $k$ is the number of hidden concepts to be learned. The vector representations of the documents based on this model can be found in the columns of $\Sigma_k V_k^*$.
@@ -157,13 +157,13 @@ The number of dimensions $k$ is an empirical question. Essentially, $k$ is much 
 
 
 \subsubsection{Latent Dirichlet allocation}
-Latent dirichlet allocation (LDA) \cite{blei2003latent} is a generative probabilistic model that discovers automatically topics from a data collection.
+LDA \cite{blei2003latent} is a generative probabilistic model that discovers automatically topics from a data collection.
 The basic idea is that documents are represented as random mixtures over latent topics, where each topic is characterized by a distribution over words. The model is a three-level hierarchical Bayesian model with the first level being the corpus-level, the second being the document-level, and the third being the word-level. Setting the number of topics to be learned to $K$, learning is performed with Bayesian inference, e.g. by using collapsed Gibbs sampling and expectation propagation. As for K, \cite{hoffman2010online} discusses how to choose the number of topics. In this work $K$ is 100, which is also the size of the feature vector.
 
 
 \subsubsection{Extended language model}
-The basic recurrent neural network language model consists of an input layer, a hidden layer with recurrent connections that maintains a representation of the sentence history, and an output layer which produces the probability distribution over words.
-We propose a variation of the basic recurrent language model by extending it with an additional sentence-based feature layer that is connected to the output layer. Since this real-valued feature vector stays the same for all words in the current sentence, it is replicated for each word. This way, the feature information is retained in the model while the same sentence is being processed.
+The basic RNNLM consists of an input layer, a hidden layer with recurrent connections that maintains a representation of the sentence history, and an output layer which produces the probability distribution over words.
+We propose a variation of the basic RNNLM by extending it with an additional sentence-based feature layer that is connected to the output layer. Since this real-valued feature vector stays the same for all words in the current sentence, it is replicated for each word. This way, the feature information is retained in the model while the same sentence is being processed.
 The $m$ hidden layers are based on LSTMs \cite{hochreiter1997long}.
 Given a sentence $\textbf{w} = \{w_1, w_2, \ldots, w_n\}$, the sentence-level information $\textbf{f}$ is computed based on the underlying topic model and duplicated for each word. For the $i$-th word we denote its representation with $x_i$, which is encoded using 1-of-N coding, the feature input with $\text{f}_i$, the hidden layers with $s^1, s^2, \dots, s^m$ and the output layer with $y_i$. In case there is one connection from the feature input to the output layer, the hidden and output layers are computed according to \eqref{eq}.
 \begin{equation}
@@ -180,48 +180,48 @@ To train the network, that is to find the weight matrices $U_{1,\dots,m}, V, W_{
 \begin{figure} 
 \centering 
 \includegraphics[width=\columnwidth]{ModelExtended2.pdf}
-\caption{\it Extended recurrent language model with additional feature input $\textbf{f}$ and two LSTM-based hidden layers. The dashed line from the feature input to the first hidden layer represents an optional connection.}
+\caption{\it ERNNLM with additional feature input $\textbf{f}$ and two LSTM-based hidden layers. The dashed line from the feature input to the first hidden layer represents an optional connection.}
 \label{fig:model-extended}
 \end{figure}
 
 
 \section{Experiments}
-We evaluate both the factored language model and the extended language model on English-Chinese and English-Romanian language pairs. For each language pair $n$-best lists are created with our in-house phrase-based MT system; the models are used as additional features in rescoring.
+We evaluate both the FRNNLM and the ERNNLM on English-Chinese (ZH) and English-Romanian (RO) language pairs. For each language pair $n$-best lists are created with our in-house phrase-based MT system; the models are used as additional features in rescoring.
 
 \subsection{System description}
-The baseline system is an in-house implementation of a phrase-based MT system and is used to generate $n$-best lists on all of the available training data. The English-Chinese system is trained on the TED and UN corpus, optimized and rescored on the TED dev2010 and tested on the test2010 corpora.
-The English-Romanian system is trained on the corpora of WMT 2015 Shared Translation Task, optimized on the first half of news-dev 2016 and tested on the second half of news-dev 2016. In addition, a subset of 2000 sentences of the SETimes corpus is used for further optimization in rescoring.
-The English-Chinese baseline system uses two word-based language models, and 12 features in total to create an $n$-best list of size 3000.
-The English-Romanian baseline system uses two word-based language models, two cluster-based models using 50, 100 or 1000 clusters, and a POS-based language model. In total 22-23 features are used to generate an $n$-best list of size 300. A full system description can be found in \anony{\cite{niehuesusing}}.
-In decoding, both language pairs are optimized with minimum error rate training (MERT) \cite{och2003minimum}. The same is used for rescoring of the English-Chinese system, whereas the English-Romanian system uses ListNet to rerank the $n$-best list.
-All recurrent neural network-based language models for both language pairs are trained on the target side of the parallel training data. The English-Chinese system uses a vocabulary of 10K, while the English-Romanian system uses a vocabulary of 5K. Wikipedia is used to obtain word-level side information, as described in Section \ref{sec:word-level}.
-To gather sentence-level side information for the English-Chinese system, as described in \ref{sec:sentence-level}, we additionally use a web-crawled Chinese lexicon from zdic.net \cite{zdic} to show the model's performance independently of a specific encyclopedia.
+The baseline system is an in-house implementation of a phrase-based MT system and is used to generate $n$-best lists on all of the available training data. The ZH-system is trained on the TED and UN corpus, optimized and rescored on the TED dev2010 and tested on the test2010 corpora.
+The RO-system is trained on the corpora of WMT 2015 Shared Translation Task, optimized on the first half of news-dev 2016 and tested on the second half of news-dev 2016. In addition, a subset of 2000 sentences of the SETimes corpus is used for further optimization in rescoring.
+The ZH-baseline system uses two word-based language models, and 12 features in total to create an $n$-best list of size 3000.
+The RO-baseline system uses two word-based language models, two cluster-based models using 50, 100 or 1000 clusters, and a POS-based language model. In total 22-23 features are used to generate an $n$-best list of size 300. A full system description can be found in \cite{niehuesusing}.
+In decoding, both language pairs are optimized with minimum error rate training (MERT) \cite{och2003minimum}. The same is used for rescoring of the ZH-system, whereas the RO-system uses ListNet to rerank the $n$-best list.
+Both FRNNLMs and ERNNLMs for both language pairs are trained on the target side of the parallel training data. The Zh-system uses a vocabulary of 10K, while the RO-system uses a vocabulary of 5K. Wikipedia is used to obtain word-level side information, as described in Section \ref{sec:word-level}.
+To gather sentence-level side information for the Zh-system, as described in \ref{sec:sentence-level}, we additionally use a web-crawled Chinese lexicon from zdic.net \cite{zdic} to show the model's performance independently of a specific encyclopedia.
 
 
 \subsection{English-Chinese}
-The English-Chinese (ZH) system before rescoring gives a BLEU score 17.05 in testing. For all of the following experiments, our baseline is a system rescored with a basic recurrent neural language model.
-In the first experiment of English-Chinese we use the scores of the factored language model in addition to the baseline features, which is shown in Table \ref{tb:zh-factored}. BLEU score improvements over the baseline system are displayed in parentheses. Only nouns in the data are labeled with Wikipedia categories, which leads to 11.21 \% coverage of the development set and 10.61 \% of the test set. The factored model that uses words and Wikipedia categories as factors performs 0.66 BLEU score points better in testing than the same model without Wikipedia categories. The system that uses words, Wikipedia categories, and POS as factors performs 0.84 BLEU points better than the same system without Wikipedia categories.
+The Zh-system before rescoring gives a BLEU score 17.05 in testing. For all of the following experiments, our baseline system is rescored with a basic RNNLM.
+In the first ZH-experiment we use the scores of the FRNNLM in addition to the baseline features, which is shown in Table \ref{tb:zh-factored}. BLEU score improvements over the baseline system are displayed in parentheses. Only nouns in the data are labeled with Wikipedia categories, which leads to 11.21 \% coverage of the development set and 10.61 \% of the test set. The factored model that uses words and Wikipedia categories as factors performs 0.66 BLEU score points better in testing than the same model without Wikipedia categories. The system that uses words, Wikipedia categories, and POS as factors performs 0.84 BLEU points better than the same system without Wikipedia categories.
 
 \begin{table}
-\caption{\it ZH factored language models}
+\caption{\it ZH-FRNNLM}
 \vspace{2mm}
 \centering
   \begin{tabular}{ lll }
   	\hline
-  	Model                  & devdata       & testdata      \\ \hline\hline
-  	%Baseline              & 14.69         & 17.05         \\
-  	Baseline               & 14.7          & 17.02         \\
-  	+Factored LM POS       & 14.77         & 16.97         \\ \hline
-  	+Factored LM Cat       & 14.89 (+0.12) & 17.63 (+0.66) \\
-  	+Factored LM Cat + POS & 14.75 (-0.02) & 17.81 (+0.84) \\ \hline
+  	Model                 & devdata       & testdata      \\ \hline\hline
+  	%Baseline             & 14.69         & 17.05         \\
+  	Baseline              & 14.7          & 17.02         \\
+  	+FRNNLM POS           & 14.77         & 16.97         \\ \hline
+  	+FRNNLM WikiCat       & 14.89 (+0.12) & 17.63 (+0.66) \\
+  	+FRNNLM WikiCat + POS & 14.75 (-0.02) & 17.81 (+0.84) \\ \hline
   \end{tabular}
   \label{tb:zh-factored}
 \end{table}
 
-In a second experiment, the extended language model along with the different methods to compute the feature input vector based on Wikipedia are studied. Tf-idf, LSA and LDA are used for similar document ranking as well as vector representation. It is worth mentioning that the method for ranking can be paired with a different choice for representation. The performance results of various combinations of pairings are presented in Table \ref{tb:zh-extended-diff-features}. Although all combinations result in a better rescoring performance than the baseline system, choosing the same method for both steps attains a higher gain for the tf-idf and LSA model. For example, the tf-idf model creates an increase of 0.63 BLEU on the baseline system, and LSA an increase of 0.78 BLEU. The only exception to this rule is LDA. One reason for this could be suboptimal parameter picks for this generally more complex generative model. Despite the slightly better performance of the LSA model, the tf-idf model is employed in the following experiments due to its simplicity and, thus, faster training and evaluation.
+In a second experiment, the ERNNLM along with the different methods to compute the feature input vector based on Wikipedia are studied. Tf-idf, LSA and LDA are used for similar document ranking as well as vector representation. It is worth mentioning that the method for ranking can be paired with a different choice for representation. The performance results of various combinations of pairings are presented in Table \ref{tb:zh-extended-diff-features}. Although all combinations result in a better rescoring performance than the baseline system, choosing the same method for both steps attains a higher gain for the tf-idf and LSA model. For example, the tf-idf model creates an increase of 0.63 BLEU on the baseline system, and LSA an increase of 0.78 BLEU. The only exception to this rule is LDA. One reason for this could be suboptimal parameter picks for this generally more complex generative model. Despite the slightly better performance of the LSA model, the tf-idf model is employed in the following experiments due to its simplicity and, thus, faster training and evaluation.
 
 \begin{table}
-\caption{\it ZH extended language models: overview of different feature vectors}
+\caption{\it ZH-ERNNLM: overview of different feature vectors}
 \vspace{2mm}
 \centering
   \begin{tabular}{llll}
@@ -237,24 +237,24 @@ In a second experiment, the extended language model along with the different met
   \label{tb:zh-extended-diff-features}
 \end{table}
 
-In order to test the efficiency of the extended language model independently of the characteristics of the underlying encyclopedia  source, a Chinese lexicon is crawled from zdic.net \cite{zdic}. It contrasts Wikipedia in the variety and length of definitions. The lexicon provides short but precise Chinese explanations for all types of words, particularly verbs. Despite the differences between Wikipedia and zdict, the use of the lexicon achieves an increase of 0.56 BLEU in testing, which is comparable to the
+In order to test the efficiency of the ERNNLM independently of the characteristics of the underlying encyclopedia  source, a Chinese lexicon is crawled from zdic.net \cite{zdic}. It contrasts Wikipedia in the variety and length of definitions. The lexicon provides short but precise Chinese explanations for all types of words, particularly verbs. Despite the differences between Wikipedia and zdict, the use of the lexicon achieves an increase of 0.56 BLEU in testing, which is comparable to the
 model improvement based on Wikipedia, as shown in Table \ref{tb:zh-extended-diff-sources}.
 
 \begin{table}
-\caption{\it ZH extended language models: comparison between different encyclopedia sources}
+\caption{\it ZH-ERNNLM: comparison between different encyclopedia sources}
 \vspace{2mm}
 \centering
   \begin{tabular}{lll}
   	\hline
-  	Model    & devdata       & testdata      \\ \hline\hline
-  	Baseline & 14.7          & 17.02         \\ \hline
-  	+WIKI    & 14.78 (+0.08) & 17.68 (+0.66) \\
-  	+ZDICT    & 14.91 (+0.21) & 17.58 (+0.56) \\ \hline
+  	Model         & devdata       & testdata      \\ \hline\hline
+  	Baseline      & 14.7          & 17.02         \\ \hline
+  	+ERNNLM WIKI  & 14.78 (+0.08) & 17.68 (+0.66) \\
+  	+ERNNLM ZDICT & 14.91 (+0.21) & 17.58 (+0.56) \\ \hline
   \end{tabular}
   \label{tb:zh-extended-diff-sources}
 \end{table}
 
-An overview of all the models discussed so far along with their perplexities is given in Table \ref{tb:PPL}. All models exhibit an evident reduction in perplexity compared to the baseline system, which is consistent with the rescoring results. In addition, two extended language models whose feature inputs are determined differently are listed with their model perplexities. The first model's feature input depends on both Wikipedia and zdict.net; the second model's feature input is based on the last and next four sentences.
+An overview of all the models discussed so far along with their perplexities is given in Table \ref{tb:PPL}. All models exhibit an evident reduction in perplexity compared to the baseline system, which is consistent with the rescoring results. In addition, two ERNNLMs whose feature inputs are determined differently are listed with their model perplexities. The first model's feature input depends on both Wikipedia and zdict.net; the second model's feature input is based on the last and next four sentences.
 
 \begin{table}
   \caption{\it ZH model perplexities}
@@ -262,15 +262,15 @@ An overview of all the models discussed so far along with their perplexities is 
   \centering
   \begin{tabular}{ ll}
   	\hline
-  	Model               & PPL    \\ \hline\hline
-  	Baseline            & 128.17 \\ \hline
-  	Factored LM POS     & 110.86 \\
-  	Factored LM Cat     & 109.73 \\
-  	Factored LM Cat+POS & 110.38 \\ \hline
-  	WIKI                & 118.11 \\
-  	ZDICT               & 118.64 \\ 
-  	WIKI+ZDICT			& 119.02 \\ 
-	WIKI 4-CONTEXT		& 118.46 \\ \hline
+  	Model                 & PPL    \\ \hline\hline
+  	Baseline              & 128.17 \\ \hline
+  	FRNNLM POS            & 110.86 \\
+  	FRNNLM WikiCat        & 109.73 \\
+  	FRNNLM WikiCat+POS    & 110.38 \\ \hline
+  	ERNNLM WIKI           & 118.11 \\
+  	ERNNLM ZDICT          & 118.64 \\
+  	ERNNLM WIKI+ZDICT     & 119.02 \\
+  	ERRNLM WIKI 4-CONTEXT & 118.46 \\ \hline
   \end{tabular}
   \label{tb:PPL}
 \end{table}
@@ -280,26 +280,26 @@ As indicated in Figure \ref{fig:model-extended}, an additional connection was es
 
 
 \begin{table}
-\caption{\it ZH extended language models: connecting feature input with two layers}
+\caption{\it ZH-ERNNLM: connecting feature input with two layers}
 \vspace{2mm}
 \centering
   \begin{tabular}{lll}
   	\hline
-  	Model       & devdata       & testdata      \\ \hline\hline
-  	Baseline    & 14.70         & 17.02         \\ \hline
-  	+TFIDF      & 14.78 (+0.08) & 17.68 (+0.63) \\
-  	+2Con TFIDF & 14.74 (+0.04) & 17.81 (+0.79)
+  	Model              & devdata       & testdata      \\ \hline\hline
+  	Baseline           & 14.70         & 17.02         \\ \hline
+  	+ERNNLM TFIDF      & 14.78 (+0.08) & 17.68 (+0.63) \\
+  	+ERNNLM 2Con TFIDF & 14.74 (+0.04) & 17.81 (+0.79)
   \end{tabular}
   \label{tb:zh-extended-both}
 \end{table}
 
 
 \subsection{English-Romanian}
-In the previous work \anony{\cite{niehuesusing}}, the factored language model for English-Romanian integrated four factors: the word's surface form, POS, and word clusters with 100 and 1000 class respectively. Our English-Romanian (RO) experiments build on top that, using a vocabulary size of 5K for all systems as well as the same denotations to illustrate the following results. In the first experiment, the factored language models are evaluated without the baseline features. The system from the previous work that uses all four factors for input and prediction has a BLEU score of 28.54, as shown in Table \ref{tb:ro-factored-single}. This model will serve as reference for our models. For English-Romanian we chose to extract Wikipedia categories not only for nouns but also for all word types. The word coverages of labeled words can be found in Table \ref{tb:ro-word-coverage}, which shows significant differences between the two options.
-After adding the extracted Wikipedia word categories as additional factors, the factored models show an improvement of 0.17 BLEU and 0.30 BLEU respectively depending on which option of data labeling was chosen.
+In the previous work \cite{niehuesusing}, the FRNNLM for English-Romanian integrated four factors: the word's surface form, POS, and word clusters with 100 and 1000 class respectively. Our RO-experiments build on top that, using a vocabulary size of 5K for all systems as well as the same denotations to illustrate the following results. In the first experiment, the FRNNLMs are evaluated without the baseline features. The system from the previous work that uses all four factors (4F) for input and prediction has a BLEU score of 28.54, as shown in Table \ref{tb:ro-factored-single}. This model will serve as reference for our models. For the RO-system we chose to extract Wikipedia categories not only for nouns (N) but also for all word types (A). The word coverages of labeled words can be found in Table \ref{tb:ro-word-coverage}, which shows significant differences between the two options.
+After adding the extracted Wikipedia word categories as additional factors, the FRNNLMs show an improvement of 0.17 BLEU and 0.30 BLEU respectively depending on which option of data labeling was chosen.
 
 \begin{table}
-\caption{\it RO factored language models: word coverage of Wikipedia categories}
+\caption{\it RO-FRNNLM: word coverage of Wikipedia categories}
 \vspace{2mm}
 \centering
   \begin{tabular}{lll}
@@ -329,64 +329,64 @@ After adding the extracted Wikipedia word categories as additional factors, the 
 
 
 \begin{table}
-\caption{\it RO factored language models: single scores}
+\caption{\it RO-FRNNLM: single scores}
 \vspace{2mm}
 \centering
   \begin{tabular}{lll}
   	\hline
-  	Input            & Prediction   & Single        \\ \hline\hline
-  	Word             & Word         & 27.88         \\
-  	All factors      & All factors  & 28.54         \\ \hline
-  	+Cat (Nouns)     & +Cat (Nouns) & 28.71 (+0.17) \\
-  	+Cat (All Words) & +Cat (All)   & 28.84 (+0.30)
+  	Input               & Prediction   & Single        \\ \hline\hline
+  	Word                & Word         & 27.88         \\
+  	4F                  & 4F           & 28.54         \\ \hline
+  	+FRNNLM WikiCat (N) & +WikiCat (N) & 28.71 (+0.17) \\
+  	+FRNNLM WikiCat (A) & +WikiCat (A) & 28.84 (+0.30)
   \end{tabular}
   \label{tb:ro-factored-single}
 \end{table}
 
-Table \ref{tb:ro-factored-combi} shows the results of the model's joint probability used in addition to the baseline features in three configurations \anony{\cite{niehuesusing}}. 
-Adding Wikipedia categories for all word types achieves an improvement of about 0.1 BLEU in two configurations (Conf2 and Conf3) over the reference model.
+Table \ref{tb:ro-factored-combi} shows the results of the model's joint probability used in addition to the baseline features in three configurations \cite{niehuesusing}. 
+Adding Wikipedia categories for all word types (A) achieves an improvement of about 0.1 BLEU in two configurations (Conf2 and Conf3) over the reference model.
 
 
 \begin{table}
-\caption{\it RO factored language models: end scores}
+\caption{\it RO-FRNNLM: end scores}
 \vspace{2mm}
 \centering
   \begin{tabular}{llll}
   	\hline
-  	Model                    & Conf1   & Conf2   & Conf3   \\ \hline\hline
-  	Baseline                 & 29.86   & 30.00   & 29.75   \\
-  	+All factors             & 29.94   & 30.01   & 30.01   \\ \hline
-  	+All factors + Nouns     & 29.94   & 30.31   & 29.99   \\
-  	                         & (+0.00) & (+0.30) & (-0.02) \\
-  	+All factors + All Words & 29.95   & 30.13   & 30.14   \\
-  	                         & (+0.01) & (+0.12) & (+0.13)
+  	Model        & Conf1   & Conf2   & Conf3   \\ \hline\hline
+  	Baseline     & 29.86   & 30.00   & 29.75   \\
+  	+FRNNLM 4F   & 29.94   & 30.01   & 30.01   \\ \hline
+  	+FRNNLM 4F+N & 29.94   & 30.31   & 29.99   \\
+  	             & (+0.00) & (+0.30) & (-0.02) \\
+  	+FRNNLM 4F+A & 29.95   & 30.13   & 30.14   \\
+  	             & (+0.01) & (+0.12) & (+0.13)
   \end{tabular}
   \label{tb:ro-factored-combi}
 \end{table}
 
-In another experiment, the extended language model is used for rescoring in addition to the previously discussed factored neural language models. The results are illustrated in Table \ref{tb:ro-extended}. The improvement over the original factored neural language model with four factors is indicated in parentheses. It turns out that the combined use of Wikipedia categories and Wikipedia topic information performs about 0.2 BLEU better in two different configurations (Conf2 and Conf3). The system that uses Wikipedia categories for all word types in conjunction with the extended language model achieves an improvement of 0.07 BLEU over the system without extended language model scores in these configurations.
-The best system exhibits a score of 30.23 BLEU, which is 0.22 BLEU better than the best system of the previous work \anony{\cite{niehuesusing}} that has the same vocabulary size.
+In another experiment, the ERNNLM is used together with FRNNLM for rescoring. The results are illustrated in Table \ref{tb:ro-extended}. The improvement over the sole FRNNLM 4F is indicated in parentheses. It turns out that the combined use of Wikipedia categories and Wikipedia topic information based on tf-idf performs about 0.2 BLEU better in two different configurations (Conf2 and Conf3). The system that uses Wikipedia categories for all word types in conjunction with the extended language model achieves an improvement of 0.07 BLEU over the system without extended language model scores in these configurations.
+The best system exhibits a score of 30.23 BLEU, which is 0.22 BLEU better than the best system of the previous work \cite{niehuesusing} that has the same vocabulary size.
 
 \begin{table}
-\caption{\it RO extended language models: end scores}
+\caption{\it RO-ERNNLM + RO-FRNNLM: end scores}
 \vspace{2mm}
 \centering
   \begin{tabular}{llll}
   	\hline
-  	Model                   & Conf1   & Conf2   & Conf3   \\ \hline\hline
-  	All factors             & 29.99   & 30.19   & 29.99   \\
-  	                        & (+0.05) & (+0.18) & (-0.02) \\
-  	All factors + Nouns     & 29.90   & 30.29   & 30.23   \\
-  	                        & (+0.05) & (+0.28) & (+0.24) \\
-  	All factors + All Words & 30.00   & 30.20   & 30.21   \\
-  	                        & (+0.05) & (+0.19) & (+0.20)
+  	Model        & Conf1   & Conf2   & Conf3   \\ \hline\hline
+  	+FRNNLM 4F   & 29.99   & 30.19   & 29.99   \\
+  	             & (+0.05) & (+0.18) & (-0.02) \\
+  	+FRNNLM 4F+N & 29.90   & 30.29   & 30.23   \\
+  	             & (+0.05) & (+0.28) & (+0.24) \\
+  	+FRNNLM 4F+A & 30.00   & 30.20   & 30.21   \\
+  	             & (+0.05) & (+0.19) & (+0.20)
   \end{tabular}
   \label{tb:ro-extended}
 \end{table}
 
 
 \section{Conclusion}
-This work provides the novel idea to integrate higher-level information from encyclopedic sources, such as Wikipedia, into recurrent neural language models. Two approaches are proposed: the first uses a factored neural language model, the second incorporates more complex information by using a dedicated feature layer in the conventional recurrent neural model. In addition, three methods are introduced to prepare the additional data and represent it in the correct form.
+This work provides the novel idea to integrate higher-level information from encyclopedic sources, such as Wikipedia, into RNNLMs. Two approaches are proposed: the first uses a FRNNLM, the second incorporates more complex information by using a dedicated feature layer in the conventional recurrent neural model. In addition, three methods are introduced to prepare the additional data and represent it in the correct form.
 By using global information from large encyclopedia, we have improved translation systems on two different language pairs.  
 This work exhibits great potential for low-resource translation tasks. 
 

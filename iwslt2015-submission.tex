@@ -165,13 +165,13 @@ The basic idea is that documents are represented as random mixtures over latent 
 The basic RNNLM consists of an input layer, a hidden layer with recurrent connections that maintains a representation of the sentence history, and an output layer which produces the probability distribution over words.
 We propose a variation of the basic RNNLM by extending it with an additional sentence-based feature layer that is connected to the output layer. Since this real-valued feature vector stays the same for all words in the current sentence, it is replicated for each word. This way, the feature information is retained in the model while the same sentence is being processed.
 The $m$ hidden layers are based on LSTMs \cite{hochreiter1997long}.
-Given a sentence $\textbf{w} = \{w_1, w_2, \ldots, w_n\}$, the sentence-level information $\textbf{f}$ is computed based on the underlying topic model and duplicated for each word. For the $i$-th word we denote its representation with $x_i$, which is encoded using 1-of-N coding, the feature input with $\text{f}_i$, the hidden layers with $s^1, s^2, \dots, s^m$ and the output layer with $y_i$. In case there is one connection from the feature input to the output layer, the hidden and output layers are computed according to \eqref{eq}.
+Given a sentence $\textbf{w} = \{w_1, w_2, \ldots, w_n\}$, the sentence-level information $\text{f}$ is computed based on the underlying topic model and duplicated for each word. For the $i$-th word we denote its representation with $x_i$, which is encoded using 1-of-N coding, the hidden layers with $s^1, s^2, \dots, s^m$ and the output layer with $y_i$. In case there is one connection from the feature input to the output layer, the hidden and output layers are computed according to \eqref{eq}.
 \begin{equation}
 \label{eq}
 \begin{aligned}
 s^1_i &= f_1(U_1x_i + W_1s^1_{i-1}) \\
 s^j_i &= f_j(U_js^{j-1}_i + W_js^j_{i-1}), \\j &\in \{2,\ldots,m\} \\
-y_i &= g(Vs^m_i + F\text{f}_i)
+y_i &= g(Vs^m_i + F\text{f})
 \end{aligned}
 \end{equation}
 where $f_i$ represents activation functions, and $g$ the softmax function.

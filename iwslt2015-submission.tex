@@ -132,11 +132,11 @@ For example, the sentence
 \end{align}
 exhibits several problems. First, when a corpus is translated into a low-resource language, e.g. Romanian, some of the content words do not have their own Wikipedia entries. This means we cannot take full advantage of the first approach. Second, the main context word of ``columns'', which is ``journalists'', appears later in the sentence; therefore a recurrent language model that only considers the previous context would fail. 
 This motivated the idea to consider words in the entire sentence, unlike \cite{mikolov2012context}, and create a topic vector for each sentence by searching through Wikipedia to find topic related articles. In the above example sentence, these would probably be news related articles. By compressing the information of these articles into a vector which is associated with each word, global topic information spanning neighboring words can be considered when translating a word. 
-To create a ranking of similar documents and their representation to a given sentence, VSMs can be employed, such as tf-idf \cite{salton1986introduction} and LSA \cite{bradford2008empirical}, but also probabilistic models, such as LDA \cite{blei2003latent}. After representing the sentences and cleaned encyclopedia articles as bag-of-words, we query for each sentence the most similar documents from the total set of encyclopedia articles. These documents provide general information, such as higher-level concepts, about the current sentence. Based on the chosen model, e.g. LSA, the best documents are transformed into vector representations and the averaged sum of the vectors is used as the additional feature input for a recurrent neural network-based language model, which we will refer to as an extended recurrent neural language model (ERNNLM). This process is illustrated in Figure \ref{fig:flow}.
+To create a ranking of similar documents and their representation to a given sentence, VSMs can be employed, such as tf-idf \cite{salton1986introduction} and LSA \cite{bradford2008empirical}, but also probabilistic models, such as LDA \cite{blei2003latent}. After representing the sentences and cleaned encyclopedia articles as bag-of-words, we query for each sentence the most similar documents from the total set of encyclopedia articles. These documents provide general information, such as higher-level concepts, about the current sentence. Based on the chosen model, e.g. LSA, the best documents are transformed into vector representations and the average of the vectors is used as the additional feature input for a recurrent neural network-based language model, which we will refer to as an extended recurrent neural language model (ERNNLM). This process is illustrated in Figure \ref{fig:flow}.
 \begin{figure} 
 \centering 
 \includegraphics[width=\columnwidth]{flow.pdf}
-\caption{\it Feature input creation process for the ERNNLM. Sentence and encyclopedia articles are transformed into vector representations based on the underlying method. The articles most similar to the sentence are chosen; then their averaged sum constitutes the feature input.}
+\caption{\it Feature input creation process for the ERNNLM. Sentence and encyclopedia articles are transformed into vector representations based on the underlying method. The articles most similar to the sentence are chosen; then their average constitutes the feature input.}
 \label{fig:flow}
 \end{figure}
 
@@ -145,14 +145,14 @@ Tf-idf \cite{salton1986introduction} is a co-occurrence measure and determines t
 The cosine distance can be used to determine a ranking of similar documents for a given sentence query.
 For a predefined number of top documents $n$ we determine the average tf-idf value of the best $n$ documents for a query.
 This vector constitutes the sentence level semantic information which is fed into an ERNNLM together with the surface form of a sentence.
-Shortcomings of this model include the inability to reduce the description length of the document, since words are only replaced with values. Also, it does not tell much about the statistical structure within and between documents.
+Shortcomings of this model include the inability to reduce the description length of the document, since words are only replaced with values.
 
 
 \subsubsection{Latent semantic analysis}
 LSA \cite{deerwester1990indexing} is a method that discovers hidden concepts in documents by using single value decomposition (SVD) on the set of documents $D$.
 LSA uses a term-document matrix $A$ with rows corresponding to terms and columns corresponding to documents. The entry $A_{i,j}$ equates to the tf-idf value of the term $i$ for the document $j$. SVD decomposes $A$ into $U$, $\Sigma$, and $V$, such that $A = U \Sigma V^*$.
 LSA uses the decomposition to find a low-rank approximation, that is, a matrix $A_k = U_k \Sigma_k V_k^*$ of a predefined lower rank $k$ closest in similarity to the original matrix $A$. This is done by deleting all but the $k$ biggest single values in $\Sigma$.
-Therefore, LSA minimizes the Frobenius distance $\|A-A_k\|_F$. In this work, $k$ is the number of hidden concepts to be learned. The vector representations of the documents based on this model can be found in the columns of $\Sigma_k V_k^*$.
+Therefore, LSA minimizes the Frobenius norm $\|A-A_k\|_F$. In this work, $k$ is the number of hidden concepts to be learned. The vector representations of the documents based on this model can be found in the columns of $\Sigma_k V_k^*$.
 The number of dimensions $k$ is an empirical question. Essentially, $k$ is much smaller than the original space dimension, which is usually the total number of documents. Previous papers show that for Wikipedia dumps a good value for $k$ should be chosen between 200 to 500 \cite{bradford2008empirical}. In this work $k$ is 300.
 
 
@@ -270,7 +270,7 @@ An overview of all the models discussed so far along with their perplexities is 
   	ERNNLM WIKI           & 118.11 \\
   	ERNNLM ZDICT          & 118.64 \\
   	ERNNLM WIKI+ZDICT     & 119.02 \\
-  	ERRNLM WIKI 4-CONTEXT & 118.46 \\ \hline
+  	ERNNLM WIKI 4-CONTEXT & 118.46 \\ \hline
   \end{tabular}
   \label{tb:PPL}
 \end{table}

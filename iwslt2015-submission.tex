@@ -82,9 +82,9 @@ Similar methods were applied to other knowledge sources, such as WordNet \cite{h
 However, to our knowledge, it is the first time encyclopedic knowledge is used for neural language modeling.
 
 \section{Integration of encyclopedic information}
-We propose two approaches to integrate encyclopedic information into neural language models.
-First, words are labeled with Wikipedia categories. The hierarchical page structure of Wikipedia enables us to obtain a page's category which we use as factored input into the previously described FRNNLM.
-Second, for every sentence in the data a ranking of related encyclopedia articles is established by using a VSM or topic model. Based on the underlying model a feature vector, which comprises the information of the most similar documents to the current sentence, is computed  and fed into a neural language model as additional input. The second approach is not limited to Wikipedia, but can be applied to any encyclopedia. To test the performance of this method independently of the underlying knowledge source we have crawled a Chinese lexicon from zdic.net \cite{zdic} for which the results are presented later on. 
+We propose two approaches to integrate encyclopedic information into neural language models of the target side of a language pair.
+First, the target side words are labeled with Wikipedia categories. The hierarchical page structure of Wikipedia in the target language enables us to obtain a page's category which we use as factored input into the previously described FRNNLM.
+Second, for every sentence in the data a ranking of related encyclopedia articles is established by using a VSM or topic model. Based on the underlying model, a feature vector, which comprises the information of the most similar documents to the current sentence, is computed  and fed into a neural language model as additional input. The second approach is not limited to Wikipedia, but can be applied to any encyclopedia. To test the performance of this method independently of the underlying knowledge source we have crawled a Chinese lexicon from zdic.net \cite{zdic} with 38.285 articles, for which the results are presented later on. 
 
 
 \subsection{Word-level information} \label{sec:word-level}
@@ -117,7 +117,7 @@ Our approach solves this problem by labeling the words of the sentence with acco
 A Wikipedia page, labeled with a title, is either an article or a category page which encompasses one or multiple pages.
 We define the search space as the set of all page titles. Given a word, we search for the page with the same word as title and retrieve its category which is found at the bottom of the page.
 %In case of multiple categories we pick the first one, which is usually the most general one.
-In the implementation, the offline Wikipedia dump is used to create a mapping between pages and their categories. Using a lower bound for the number of elements in a category, we pick recursively the parent of a category if it does not meet this requirement. This reduces the total number of associated articles and leads to better performances. In case no category is found at all, a word's part-of-speech is used instead.
+In the implementation, the offline Wikipedia dump is used to create a mapping between pages and their categories. Using a lower bound for the number of elements in a category, we pick recursively the parent of a category if it does not meet this requirement. In the later experiments we used a lower bound of five. This reduces the total number of associated articles and leads to better performances. In case no category is found at all, a word's part-of-speech is used instead.
 One characteristic of Wikipedia is that most of its articles only refer to a small group of lexical categories. For example, there are a lot more articles about objects (nouns) than activities (verbs). Since topic words are usually nouns, it suffices to label only nouns in a sentence to improve model quality, which is shown in Example \ref{ex:wiki-cat}.
 
 \subsubsection{Factored neural language model}
@@ -189,12 +189,13 @@ To train the network, that is to find the weight matrices $U_{1,\dots,m}, V, W_{
 We evaluate both the FRNNLM and the ERNNLM on English-Chinese (ZH) and English-Romanian (RO) language pairs. For each language pair $n$-best lists are created with our in-house phrase-based MT system; the models are used as additional features in rescoring.
 
 \subsection{System description}
-The baseline system is an in-house implementation of a phrase-based MT system and is used to generate $n$-best lists on all of the available training data. The ZH-system is trained on the TED and UN corpus, optimized and rescored on the TED dev2010 and tested on the test2010 corpora.
-The RO-system is trained on the corpora of WMT 2015 Shared Translation Task, optimized on the first half of news-dev 2016 and tested on the second half of news-dev 2016. In addition, a subset of 2000 sentences of the SETimes corpus is used for further optimization in rescoring.
-The ZH-baseline system uses two word-based language models, and 12 features in total to create an $n$-best list of size 3000.
-The RO-baseline system uses two word-based language models, two cluster-based models using 50, 100 or 1000 clusters, and a POS-based language model. In total 22-23 features are used to generate an $n$-best list of size 300. A full system description can be found in \cite{niehuesusing}.
+The baseline system is an in-house implementation of a phrase-based MT system and is used to generate $n$-best lists on all of the available training data. The ZH-system is trained on the TED and UN corpus, optimized and rescored on the TED dev2010 and tested on the test2010 corpora. The Chinese corpus contains 148.968 sentences, the development set 887 sentences. The Chinese neural language models are tested on a $3000$-best list with a total of 455.965 sentences.
+The RO-system is trained on the corpora of WMT 2015 Shared Translation Task, optimized on the first half of news-dev 2016 and tested on the second half of news-dev 2016. In addition, a subset of 2000 sentences of the SETimes corpus is used for further optimization in rescoring. The Romanian corpus contains 604.588 sentences, the development set 1000 sentences. The Romanian neural language models are tested in three configurations on $300$-best lists with 1.288.319, 167.567 and 162.928 sentences respectively.
+
+The ZH-baseline system uses two word-based language models, and 12 features in total to create a $3000$-best list.
+The RO-baseline system uses two word-based language models, two cluster-based models using 50, 100 or 1000 clusters, and a POS-based language model. In total 22-23 features are used to generate a $300$-best list. A full system description can be found in \cite{niehuesusing}.
 In decoding, both language pairs are optimized with minimum error rate training (MERT) \cite{och2003minimum}. The same is used for rescoring of the ZH-system, whereas the RO-system uses ListNet to rerank the $n$-best list.
-Both FRNNLMs and ERNNLMs for both language pairs are trained on the target side of the parallel training data. The Zh-system uses a vocabulary of 10K, while the RO-system uses a vocabulary of 5K. Wikipedia is used to obtain word-level side information, as described in Section \ref{sec:word-level}.
+Both FRNNLMs and ERNNLMs for both language pairs are trained on the target side of the parallel training data. The Chinese neural language models use a vocabulary of 10K, while the Romanian models use a vocabulary of 5K. Wikipedia is used to obtain word-level side information, as described in Section \ref{sec:word-level}.
 To gather sentence-level side information for the Zh-system, as described in \ref{sec:sentence-level}, we additionally use a web-crawled Chinese lexicon from zdic.net \cite{zdic} to show the model's performance independently of a specific encyclopedia.
 
 
@@ -295,7 +296,7 @@ As indicated in Figure \ref{fig:model-extended}, an additional connection was es
 
 
 \subsection{English-Romanian}
-In the previous work \cite{niehuesusing}, the FRNNLM for English-Romanian integrated four factors: the word's surface form, POS, and word clusters with 100 and 1000 class respectively. Our RO-experiments build on top that, using a vocabulary size of 5K for all systems as well as the same denotations to illustrate the following results. In the first experiment, the FRNNLMs are evaluated without the baseline features. The system from the previous work that uses all four factors (4F) for input and prediction has a BLEU score of 28.54, as shown in Table \ref{tb:ro-factored-single}. This model will serve as reference for our models. For the RO-system we chose to extract Wikipedia categories not only for nouns (N) but also for all word types (A). The word coverages of labeled words can be found in Table \ref{tb:ro-word-coverage}, which shows significant differences between the two options.
+In the previous work \cite{niehuesusing}, the FRNNLM for English-Romanian integrated four factors: the word's surface form, POS, and word clusters with 100 and 1000 class respectively. Our Romanian neural language models build on top that, using a vocabulary size of 5K for all systems as well as the same denotations to illustrate the following results. In the first experiment, the FRNNLMs are evaluated without the baseline features. The system from the previous work that uses all four factors (4F) for input and prediction has a BLEU score of 28.54, as shown in Table \ref{tb:ro-factored-single}. This model will serve as reference for our models. For the RO-system we chose to extract Wikipedia categories not only for nouns (N) but also for all word types (A). The word coverages of labeled words can be found in Table \ref{tb:ro-word-coverage}, which shows significant differences between the two options.
 After adding the extracted Wikipedia word categories as additional factors, the FRNNLMs show an improvement of 0.17 BLEU and 0.30 BLEU respectively depending on which option of data labeling was chosen.
 
 \begin{table}
@@ -343,7 +344,7 @@ After adding the extracted Wikipedia word categories as additional factors, the 
   \label{tb:ro-factored-single}
 \end{table}
 
-Table \ref{tb:ro-factored-combi} shows the results of the model's joint probability used in addition to the baseline features in three configurations \cite{niehuesusing}. 
+Table \ref{tb:ro-factored-combi} shows the results of the model's joint probability used in addition to the baseline features in three configurations using different features \cite{niehuesusing}. 
 Adding Wikipedia categories for all word types (A) achieves an improvement of about 0.1 BLEU in two configurations (Conf2 and Conf3) over the reference model.
 
 
